@@ -262,12 +262,12 @@ export default {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
             this.getMegUserHeadImage(msg_ret)
             console.log(msg_ret.data.group_msg_list)
-            if (msg_ret.code == 200) {
-              if (msg_ret.data) {
-                this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
-                console.log(this.groups)
-              }
-            }
+            // if (msg_ret.code == 200) {
+            //   if (msg_ret.data) {
+            //     this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
+            //   }
+            // }
+            console.log(this.groups)
             this.syckCheck()
           } else {
             //  msg_status 等于其他都是没有新消息，继续调用sync_check接口
@@ -286,16 +286,18 @@ export default {
     getMegUserHeadImage (data) {
       if (data.data.group_msg_list.msg_list.length > 0) {
         data.data.group_msg_list.msg_list.map((itemMsg) => {
-          let HeadPath = this.otherUsersHeadImage.map((img) => {
+          let HeadPath = null
+          for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
             if (
-              img.group_id === itemMsg.group_id &&
-              img.username === itemMsg.FromUserName
+              this.otherUsersHeadImage[i].username === itemMsg.FromUserName
             ) {
-              return img.headPath
+              HeadPath = this.otherUsersHeadImage[i].headPath
+              break
             }
-          })
-          if (HeadPath.length > 0) {
+          }
+          if (HeadPath) {
             Object.assign(itemMsg, {'UserHeadImage': HeadPath})
+            this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -314,8 +316,8 @@ export default {
                 headPath: headPath
               })
               Object.assign(itemMsg, {'UserHeadImage': headPath})
-              console.log(itemMsg)
-              console.log(this.groups)
+              this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
+              return
             })
           }
         })

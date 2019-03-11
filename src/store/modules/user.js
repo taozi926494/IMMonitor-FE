@@ -101,6 +101,10 @@ const user = {
         withCredentials: true
       }).then((e) => {
         if (e && e.data && e.data.code === 200) {
+          commit('SET_OTHER_USER_HEAD_IMAGE', {
+            username: payload.username,
+            headPath: `${BaseUrl}${e.data.data.FilePath}`
+          })
           commit('SET_SELF_HEAD_IMAGE', `${BaseUrl}${e.data.data.FilePath}`)
         }
       })
