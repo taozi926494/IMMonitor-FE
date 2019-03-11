@@ -170,7 +170,7 @@ img {
 
   .audio-chat-box-left {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
 
     .chat-left {
@@ -229,7 +229,7 @@ img {
 
   .audio-chat-box-right {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
 
     .chat-right {
@@ -275,6 +275,137 @@ img {
   .audioText-right {
     p {
       right: 57px;
+    }
+  }
+}
+
+.preview-image-box{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  img{
+    width: 50%;
+    height: auto;
+  }
+  .iconStyle{
+    position: absolute;
+    top: 0%;
+    right: 0;
+    width: 80px!important;
+    height: 80px!important;
+    z-index: 9999;
+    cursor: pointer;
+    fill: #333!important;
+    background-color: #fff;
+    &:hover{
+      fill: #000!important;
+    }
+  }
+}
+
+.response-image-chat {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .image-chat-box-left {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    .chat-left {
+      min-width: 200px;
+      position: relative;
+      cursor: pointer;
+      min-height: 200px;
+      span {
+        width: 100px;
+        max-height: 40px;
+        overflow: hidden;
+        position: absolute;
+        right: -110px;
+        top: 0px;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        a {
+          width: 16px;
+          height: 16px;
+          background-color: #ff0000;
+          border-radius: 50%;
+          margin-right: 4px;
+          margin-bottom: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+        }
+      }
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+.send-image-chat {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+
+  .image-chat-box-right {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+
+    .chat-right {
+      min-width: 200px;
+      position: relative;
+      cursor: pointer;
+      min-height: 200px;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+      span {
+        width: 100px;
+        max-height: 40px;
+        overflow: hidden;
+        position: absolute;
+        left: -110px;
+        top: 0px;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+
+        a {
+          width: 16px;
+          height: 16px;
+          background-color: #ff0000;
+          border-radius: 50%;
+          margin-left: 4px;
+          margin-bottom: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+        }
+      }
     }
   }
 }

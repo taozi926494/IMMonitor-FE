@@ -11,31 +11,44 @@
 import './index.scss'
 import { mapGetters } from "vuex";
 import GroupPanel from "@/components/GroupPanel";
-import msg_list from "@/mock/msg_list"
-import msg_detect from "@/mock/msg_detect"
+// import msg_list from "@/mock/msg_list"
+// import msg_detect from "@/mock/msg_detect"
+// import groups from '@/mock/groups'
+import mock_groups from '@/mock/groups'
+import mock_msg_list from '@/mock/msg_list'
+import mock_msg_detect_list from '@/mock/msg_detect'
 
 export default {
   name: "home",
+  data () {
+    return {
+      // msg_list,
+      // msg_detect,
+      // groups
+    }
+  },
   components: {
     GroupPanel
   },
   computed: {
     ...mapGetters(["userInfo", "groups"])
   },
+  mounted () {
+    // this.groups = mock_groups
+    this.$store.commit('SET_GROUPS', mock_groups)
+    let msg = {
+      msg_list: mock_msg_list,
+      msg_list_detected: mock_msg_detect_list
+    }
+    console.log(msg)
+    console.log(this.groups)
+    
+    this.$store.commit('HANDLE_GROUP_MSG', msg)
+    console.log(this.groups)
+  },
   methods: {
     get_msg() {
-      console.log('get_msg')
-      // msg_list.map((item) => {
-      //   let detectedArr = []
-      //   msg_detect.map((e) => {
-      //     if (item.MsgId === e.msg_id) {
-      //       detectedArr.push(e)
-      //     }
-      //   })
-      //   Object.assign(item, {'detectedArr': detectedArr})
-      // })
-
-      
+      // console.log('get_msg')
     }
   }
 };

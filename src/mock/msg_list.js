@@ -10,6 +10,38 @@ export default [
     "user_uin": "2879490841"
   },
   {
+    "Content": "\u54c8\u54c8\u54c8\u54c8", 
+    "FromUserDisplayName": "\u6539\u540d\u56de\u6765", 
+    "FromUserName": "@2f4aed76524f619b3d80bfac", 
+    "FromUserNickName": "Taoz", 
+    "MsgId": "6321791200477612487", 
+    "Type": "Text", 
+    "group_id": 1, 
+    "user_uin": "2879490841"
+  },
+  {
+    "Content": "\u54c8\u54c8\u54c8\u54c8", 
+    "FromUserDisplayName": "\u6539\u540d\u56de\u6765", 
+    "FromUserName": "@2f4aed76524f61t", 
+    "FromUserNickName": "Taoz", 
+    "MsgId": "6321791200477612488", 
+    "Type": "Image", 
+    "group_id": 1, 
+    "user_uin": "2879490841",
+    'FileUrl': 'http://img1.xcarimg.com/exp/2872/2875/2937/20101220130509576539.jpg'
+  },
+  {
+    "Content": "\u54c8\u54c8\u54c8\u54c8", 
+    "FromUserDisplayName": "\u6539\u540d\u56de\u6765", 
+    "FromUserName": "@2f4aed76524f619be4e382173d80bfab", 
+    "FromUserNickName": "Taoz", 
+    "MsgId": "6321791200477612488", 
+    "Type": "Image", 
+    "group_id": 1, 
+    "user_uin": "2879490841",
+    'FileUrl': 'http://img1.xcarimg.com/exp/2872/2875/2937/20101220130509576539.jpg'
+  },
+  {
     "FilePath": "/static/wxmsg/image/1273608170899171975.png", 
     "FromUserDisplayName": "\u6539\u540d\u56de\u6765", 
     "FromUserName": "@2f4aed76524f619be4e382173d80bfab", 

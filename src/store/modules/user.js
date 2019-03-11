@@ -8,7 +8,8 @@ const user = {
   state: {
     userInfo: {
       uin: null,
-      UserName: null,
+      // UserName: null,
+      UserName: '@2f4aed76524f619be4e382173d80bfab',
       NickName: null,
       HeadImgUrl: null,
       loginStatus: null

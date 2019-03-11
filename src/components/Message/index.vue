@@ -75,6 +75,52 @@
       <p>{{ content }}</p>
     </div>
   </div>
+  <div v-else-if="responseStyle === 'left' && type === 'Image'" class="response-image-chat">
+    <div class="image-chat-box-left">
+      <img :src="require('../../assets/images/toux1.jpeg')">
+      <div
+        @click='checkImage'
+        class="chat-left">
+        <span v-show="isDanger">
+          <a
+            v-for="(item, index) in detectedArr"
+            :key="index"
+            :title="formatTipContent(item.result_label)"
+            :style="{backgroundColor: formatTipBg(item.result_label)}">
+            {{ formatTip(item.result_label) }}
+          </a>
+        </span>
+        <img :src="fileUrl" alt="">
+      </div>
+    </div>
+    <div v-show='showPerviewImage' class="preview-image-box">
+      <img :src="fileUrl" alt="">
+      <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'right' && type === 'Image'" class="send-image-chat">
+    <div class="image-chat-box-right">
+      <div
+        @click='checkImage'
+        class="chat-right">
+        <img :src="fileUrl" alt="">
+        <span v-show="isDanger">
+          <a
+            v-for="(item, index) in detectedArr"
+            :key="index"
+            :title="formatTipContent(item.result_label)"
+            :style="{backgroundColor: formatTipBg(item.result_label)}">
+            {{ formatTip(item.result_label) }}
+          </a>
+        </span>
+      </div>
+      <img :src="require('../../assets/images/toux2.jpg')">
+    </div>
+    <div v-show='showPerviewImage' class="preview-image-box">
+      <img :src="fileUrl" alt="">
+      <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
+    </div>
+  </div>
 </template>
 
 
@@ -86,7 +132,8 @@ export default {
   data () {
     return {
       leftAudioPlay: 'icon-goutongye_yuyin_you_00',
-      rightAudioPlay: 'icon-goutongye_yuyin_zuo_00'
+      rightAudioPlay: 'icon-goutongye_yuyin_zuo_00',
+      showPerviewImage: false
     }
   },
   components: {
@@ -128,6 +175,13 @@ export default {
   methods: {
     playAudioFn () {
       this.$emit('click', this.fileUrl)
+    },
+    checkImage () {
+      this.showPerviewImage = true
+    },
+    closePre () {
+      console.log('????')
+      this.showPerviewImage = false
     },
     formatTipContent (id) {
       switch (id) {

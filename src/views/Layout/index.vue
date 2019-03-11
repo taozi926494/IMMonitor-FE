@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div class="layout">
         <Layout class="container">
@@ -191,9 +192,17 @@ export default {
   },
   mounted () {
     console.log(this.userInfo.uin)
-    if (!this.userInfo.uin) {
-      this.wxInit()
-    }
+    // if (!this.userInfo.uin) {
+    //   this.wxInit()
+    // }
+    // this.$store.state.groups = mock_groups
+    // let msg = {
+    //   msg_list: mock_msg_list,
+    //   msg_list_detected: mock_msg_detect_list
+    // }
+    // console.log(msg)
+    // console.log(this.$store.state.groups)
+    // this.$store.commit('HANDLE_GROUP_MSG', msg)
   },
   methods: {
     // openDB (name) {

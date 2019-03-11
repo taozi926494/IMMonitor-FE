@@ -1,7 +1,7 @@
 <template>
-  	<svg :class='`icon ${className}`' aria-hidden="true">
-			<use :xlink:href='`#${icon}`'></use>
-		</svg>
+  <svg @click="clickFn" :class='`icon ${className}`' aria-hidden="true">
+    <use :xlink:href='`#${icon}`'></use>
+  </svg>
 </template>
 
 <style lang="scss" scoped>
@@ -25,6 +25,11 @@ export default {
     className: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    clickFn () {
+      this.$emit('click')
     }
   }
 }

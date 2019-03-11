@@ -28,7 +28,8 @@
                 :type="msg.Type"
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
-                 />
+                :fileUrl='msg.FileUrl'
+                />
             </li>
           </ul>
         </div>
@@ -43,7 +44,6 @@
 <script>
 // import Icon from '../iconComponent'
 import './index.scss';
-import ChatAudio from '@/components/ChatAudio'
 import Message from '@/components/Message'
 import { mapGetters } from 'vuex'
 import CustormIcon from '@/components/CustormIcon'
@@ -73,7 +73,6 @@ export default {
   ,
   components: {
     CustormIcon,
-    ChatAudio,
     Message
   },
   methods: {
