@@ -28,6 +28,9 @@
                     </div>
                     <Button @click="doCheck">轮训检查</Button>
                     <Button @click="doGetMsg">接收消息</Button>
+                    <Button @click="doSelfHeadImg">自身头像</Button>
+                    <Button @click="doGroupHeadImg">群头像</Button>
+                    <Button @click="doMemberHeadImg">群成员头像</Button>
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
@@ -153,7 +156,7 @@
 </style>
 
 <script>
-// import axios from '@/tools/api.request'
+import axios from 'axios'
 // import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
 export default {
@@ -243,24 +246,28 @@ export default {
     async syckCheck () {
       try {
         let check_ret = await this.$store.dispatch('syckCheck')
-        console.log('check_ret', check_ret)
+        // 如果检查返回成功
         if (check_ret.code == 200) {
+          // 2、4、6代表有新消息
           if (check_ret.data.message_status == 2 || check_ret.data.message_status == 4 || check_ret.data.message_status == 6) {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
-            
             if (msg_ret.code == 200) {
               if (msg_ret.data) {
                 this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
               }
             }
-            this.$store.dispatch('setMsgCheckStatus', false)
+            this.syckCheck()
+          } else {
+            //  msg_status 等于其他都是没有新消息，继续调用sync_check接口
             this.syckCheck()
           }
+
         } else {
+          // 检查新消息返回失败（已过期需要重新登录）
           alert(check_ret.msg)
         }
       } catch (error) {
-        console.log(error)
+        console.log('error', error)
       }
     },
     async doCheck() {
@@ -275,6 +282,52 @@ export default {
           this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
         }
       }
+    },
+    doSelfHeadImg() {
+      console.log('click')
+      var _self = this;
+       axios({
+          method: 'get',
+          url: 'http://localhost:5000/wx/contact/get_head_img',
+          params: {
+            uin: _self.userInfo.uin,
+            username: _self.userInfo.UserName,
+          },
+          withCredentials: true
+        }).then((e) => {
+          console.log(e)
+          _self.headImgUrl =  'http://localhost:5000' + e.data.data.FilePath
+        })
+    },
+    doGroupHeadImg() {
+      var _self = this;
+      axios({
+          method: 'get',
+          url: 'http://localhost:5000/wx/contact/get_head_img',
+          params: {
+            group_id: _self.groups[0].group_id,
+            username: _self.groups[0].UserName,
+          },
+          withCredentials: true
+        }).then((e) => {
+          _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
+        })
+    },
+    doMemberHeadImg() {
+      var _self = this;
+      axios({
+          method: 'get',
+          url: 'http://localhost:5000/wx/contact/get_member_head_img',
+          params: {
+            group_id: _self.groups[0].group_id,
+            encry_chatroom_id: _self.groups[0].EncryChatRoomId,
+            username: _self.groups[0].MemberList[0].UserName,
+            user_nickname: _self.groups[0].MemberList[0].NickName,
+          },
+          withCredentials: true
+        }).then((e) => {
+          _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
+        })
     }
   }
   

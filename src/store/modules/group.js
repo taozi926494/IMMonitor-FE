@@ -9,7 +9,6 @@ Vue.use(Vuex)
 const group = {
   state: {
     groups: [],
-    msg_check_status: false,
   },
   mutations: {
     SET_GROUPS: (state, groups) => {
@@ -41,20 +40,14 @@ const group = {
     }
   },
   actions: {
-    setMsgCheckStatus(status) {
-      this.state.msg_check_status = status
-    },
     syckCheck() {
-      this.dispatch('setMsgCheckStatus', true)
       return new Promise((resolve, reject) => {
         axios({
           method: 'get',
           url: `${BaseUrl}/wx/message/sync_check`,
           withCredentials: true
         }).then((e) => {
-          if (e && e.data && e.data.code === 200) {
-            resolve(e.data)
-          }
+          resolve(e.data)
         })
       })
     },
@@ -65,7 +58,6 @@ const group = {
           url: `${BaseUrl}/wx/message/get_msg`,
           withCredentials: true
         }).then((e) => {
-          this.dispatch('setMsgCheckStatus', false)
           if (e && e.data && e.data.code === 200) {
             return resolve(e.data)
           }
