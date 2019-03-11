@@ -2,29 +2,26 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 // import mock_groups from '@/mock/groups'
-const BaseUrl = 'http://172.16.25.20:5000'
+const BaseUrl = 'http://172.16.111.6:5000'
 
 Vue.use(Vuex)
 
 const group = {
   state: {
     groups: [],
+    previewImgUrl: null
   },
   mutations: {
     SET_GROUPS: (state, groups) => {
       state.groups = groups
     },
-    SET_GROUP_HEAD_IMAGE: (state, payload) => {
-
+    SET_PREVIEW_IMG_URL: (state, previewImgUrl) => {
+      state.previewImgUrl = previewImgUrl
     },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
-      // console.log(msg_dict.msg_list_detected)
-      // console.log(msg_dict.msg_list)
-      // console.log(state.groups)
       if (msg_dict) {
         for (let i = 0; i < msg_dict.msg_list.length; i++) {
           let msg = msg_dict.msg_list[i]
-          
           msg.detectedArr = []
           for (let d_i = 0; d_i < msg_dict.msg_list_detected.length; d_i++) {
             let detect_result = msg_dict.msg_list_detected[d_i]
@@ -32,7 +29,6 @@ const group = {
               msg.detectedArr.push(detect_result)
             }
           }
-          
           for (let j = 0; j < state.groups.length; j++) {
             if (msg.group_id == state.groups[j].group_id) {
               state.groups[j].msg_list.push(msg)

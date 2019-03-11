@@ -32,6 +32,7 @@
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
                 :fileUrl='msg.FilePath'
+                :headImgUrl='msg.UserHeadImage'
                 />
             </li>
           </ul>
@@ -68,6 +69,7 @@ export default {
     ...mapGetters(["userInfo", "groups"])
   },
   updated () {
+    console.log(this.groups)
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {

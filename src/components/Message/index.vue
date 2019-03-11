@@ -1,6 +1,6 @@
 <template>
   <div v-if="responseStyle === 'left' && type === 'Text'" class="response-chat">
-    <img :src="require('../../assets/images/toux1.jpeg')" alt="">
+    <img :src="headImgUrl" alt="">
     <div class="chat-left">
       <p>{{ content }}</p>
       <span v-show="isDanger">
@@ -27,11 +27,11 @@
         </a>
       </span>
     </div>
-    <img :src="require('../../assets/images/toux2.jpg')" alt="">
+    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')" alt="">
   </div>
   <div v-else-if="responseStyle === 'left' && type === 'Audio'" class="response-audio-chat">
     <div class="audio-chat-box-left">
-      <img :src="require('../../assets/images/toux1.jpeg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
       <div
         @click='playAudioFn'
         class="chat-left">
@@ -69,7 +69,7 @@
         <b>{{ countTime }}s</b>
         <CustormIcon :icon='rightAudioPlay'/>
       </div>
-      <img :src="require('../../assets/images/toux2.jpg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
     </div>
     <div class="audioText-right">
       <p>{{ content }}</p>
@@ -77,7 +77,7 @@
   </div>
   <div v-else-if="responseStyle === 'left' && type === 'Image'" class="response-image-chat">
     <div class="image-chat-box-left">
-      <img :src="require('../../assets/images/toux1.jpeg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
       <div
         @click='checkImage'
         class="chat-left">
@@ -93,17 +93,13 @@
         <img :src="NewFileUrl" alt="">
       </div>
     </div>
-    <div v-show='showPerviewImage' class="preview-image-box">
-      <img :src="NewFileUrl" alt="">
-      <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
-    </div>
   </div>
   <div v-else-if="responseStyle === 'right' && type === 'Image'" class="send-image-chat">
     <div class="image-chat-box-right">
       <div
         @click='checkImage'
         class="chat-right">
-        <img :src="NewFileUrl" >
+        <img :src="NewFileUrl" alt="">
         <span v-show="isDanger">
           <a
             v-for="(item, index) in detectedArr"
@@ -114,11 +110,7 @@
           </a>
         </span>
       </div>
-      <img :src="require('../../assets/images/toux2.jpg')">
-    </div>
-    <div v-show='showPerviewImage' class="preview-image-box">
-      <img :src="NewFileUrl" >
-      <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
     </div>
   </div>
 </template>
@@ -133,12 +125,11 @@ export default {
     return {
       leftAudioPlay: 'icon-goutongye_yuyin_you_00',
       rightAudioPlay: 'icon-goutongye_yuyin_zuo_00',
-      showPerviewImage: false
     }
   },
   computed: {
     NewFileUrl: function () {
-      return `http://172.16.25.20:5000${this.fileUrl}`
+      return `http://172.16.111.6:5000${this.fileUrl}`
     }
   },
   components: {
@@ -168,6 +159,10 @@ export default {
     fileUrl: {
       type: String
     },
+    // 图像地址
+    headImgUrl: {
+      type: String
+    },
     countTime: {
       type: String,
       default: '--'
@@ -180,12 +175,6 @@ export default {
   methods: {
     playAudioFn () {
       this.$emit('click', this.fileUrl)
-    },
-    checkImage () {
-      this.showPerviewImage = true
-    },
-    closePre () {
-      this.showPerviewImage = false
     },
     formatTipContent (id) {
       switch (id) {
@@ -243,7 +232,10 @@ export default {
         case 25: return '#ea7817'
         // case 16: return '#e8e45c'
       }
-    }
+    },
+    checkImage () {
+      this.$store.commit('SET_PREVIEW_IMG_URL', this.NewFileUrl)
+    },
   }
 }
 </script>
