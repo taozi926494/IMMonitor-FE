@@ -1,0 +1,13 @@
+@mixin MultilineTextOverflow($nub) {
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $nub;
+  -webkit-box-orient: vertical;
+}
+
+@mixin textOverflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

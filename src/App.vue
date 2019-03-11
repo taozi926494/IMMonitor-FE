@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
+  name: 'app'
 }
 </script>
 
 <style>
+@import './style/_include/_all.scss';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+
+}
+div::-webkit-scrollbar-track-piece { 
+    background-color:#f8f8f8;
+  }
+div::-webkit-scrollbar {
+  width:0px;
+  /* height:9px; */
+}
+div::-webkit-scrollbar-thumb {
+  background-color: #e4e2eb;
+  background-clip:padding-box;
+  min-height:28px;
+}
+div::-webkit-scrollbar-thumb:hover {
+  background-color:#bbb;
 }
 </style>

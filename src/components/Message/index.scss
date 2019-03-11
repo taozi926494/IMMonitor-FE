@@ -1,0 +1,280 @@
+.chat-left,
+.chat-right {
+  font-size: 15px;
+  min-height: 40px;
+  position: relative;
+  top: 0;
+  text-align: left;
+  border-radius: 5px;
+  padding: 8px 10px;
+  max-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-left {
+  margin-left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+
+.chat-right {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #9EEA6A;
+}
+
+.chat-left:before,
+.chat-right:after {
+  /*用伪类写出小三角形*/
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  position: absolute;
+  top: 11px;
+}
+
+.chat-left:before {
+  border-right: 8px solid #fff;
+  left: -16px;
+}
+
+.chat-right:after {
+  border-left: 8px solid #9EEA6A;
+  right: -16px;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 0;
+}
+
+.response-chat {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  img {
+    left: 0;
+  }
+
+  .chat-left {
+    position: relative;
+
+    span {
+      width: 100px;
+      max-height: 40px;
+      overflow: hidden;
+      position: absolute;
+      right: -110px;
+      top: 0px;
+      color: #fff;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+
+      a {
+        width: 16px;
+        height: 16px;
+        background-color: #ff0000;
+        border-radius: 50%;
+        margin-right: 4px;
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.send-chat {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+
+  img {
+    right: 0;
+  }
+
+  .chat-right {
+    position: relative;
+
+    span {
+      width: 100px;
+      max-height: 40px;
+      overflow: hidden;
+      position: absolute;
+      left: -110px;
+      top: 0px;
+      color: #fff;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+
+      a {
+        width: 16px;
+        height: 16px;
+        background-color: #ff0000;
+        border-radius: 50%;
+        margin-left: 4px;
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.audioText-left,
+.audioText-right {
+  width: 100%;
+  margin-top: 5px;
+  font-size: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  p {
+    background: #fff;
+    position: relative;
+    padding: 8px;
+    max-width: 220px;
+    text-align: left;
+  }
+}
+
+.response-audio-chat {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .audio-chat-box-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .chat-left {
+      min-width: 100px;
+      position: relative;
+      cursor: pointer;
+
+      span {
+        width: 100px;
+        max-height: 40px;
+        overflow: hidden;
+        position: absolute;
+        right: -110px;
+        top: 0px;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+
+        a {
+          width: 16px;
+          height: 16px;
+          background-color: #ff0000;
+          border-radius: 50%;
+          margin-right: 4px;
+          margin-bottom: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+        }
+      }
+
+      b {
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .audioText-left {
+    justify-content: flex-start;
+    p {
+      left: 57px;
+    }
+  }
+}
+
+.send-audio-chat {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+
+  .audio-chat-box-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .chat-right {
+      min-width: 100px;
+      position: relative;
+      cursor: pointer;
+
+      span {
+        width: 100px;
+        max-height: 40px;
+        overflow: hidden;
+        position: absolute;
+        left: -110px;
+        top: 0px;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+
+        a {
+          width: 16px;
+          height: 16px;
+          background-color: #ff0000;
+          border-radius: 50%;
+          margin-left: 4px;
+          margin-bottom: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+        }
+      }
+
+      b {
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .audioText-right {
+    p {
+      right: 57px;
+    }
+  }
+}
