@@ -28,6 +28,7 @@
                 :type="msg.Type"
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
+                :fileUrl='"http://localhost:5000" + msg.FilePath '
                  />
             </li>
           </ul>

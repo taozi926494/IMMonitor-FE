@@ -9,10 +9,14 @@ Vue.use(Vuex)
 const group = {
   state: {
     groups: [],
+    previewImgUrl: null
   },
   mutations: {
     SET_GROUPS: (state, groups) => {
       state.groups = groups
+    },
+    SET_PREVIEW_IMG_URL: (state, previewImgUrl) => {
+      state.previewImgUrl = previewImgUrl
     },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
       // console.log(msg_dict.msg_list_detected)
