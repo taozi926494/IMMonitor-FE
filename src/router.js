@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Console from './views/Console'
 import Layout from './views/Layout'
 import Login from './views/Login'
+import GroupList from './views/GroupList'
 
 Vue.use(Router)
 
@@ -20,7 +21,12 @@ export default new Router({
           path: '/console',
           name: 'console',
           component: Console
-        }
+        },
+        {
+          path: '/grouplist',
+          name: 'grouplist',
+          component: GroupList
+        },
       ]
     },
     {

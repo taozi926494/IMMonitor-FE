@@ -163,7 +163,7 @@ export default {
       isCollapsed: false,
       menu: [
         {title: '控制台', icon: 'ios-chatbubbles', name: '1-1', path: '/'},
-        {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/group'},
+        {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/grouplist'},
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
       ]
     }
