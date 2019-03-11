@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 // import mock_groups from '@/mock/groups'
-const BaseUrl = 'http://localhost:5000'
+const BaseUrl = 'http://172.16.25.20:5000'
 
 Vue.use(Vuex)
 
@@ -13,6 +13,9 @@ const group = {
   mutations: {
     SET_GROUPS: (state, groups) => {
       state.groups = groups
+    },
+    SET_GROUP_HEAD_IMAGE: (state, payload) => {
+
     },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
       // console.log(msg_dict.msg_list_detected)
@@ -82,7 +85,27 @@ const group = {
           reject(e)
         })
       })
-    },    
+    },
+    // 获取群头像
+    getGroupHeadImage ({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: `${BaseUrl}/wx/contact/get_head_img`,
+          params: {
+            group_id: payload.group_id,
+            username: payload.username,
+          },
+          withCredentials: true
+        }).then((e) => {
+          // _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
+          if (e && e.data && e.data.code === 200) {
+            // commit('SET_GROUP_HEAD_IMAGE', e.data.data)
+            resolve(`${BaseUrl}${e.data.data.FilePath}`)
+          }
+        })
+      })
+    }  
   }
 }
 

@@ -5,5 +5,12 @@ export default [
     "result_label": 25, 
     "result_ratio": 0.63, 
     "spam_type": 2
+  },
+  {
+    "msg_id": "6321791200477612488", 
+    "result_info": "\u8214\u6211", 
+    "result_label": 25, 
+    "result_ratio": 0.63, 
+    "spam_type": 2
   }
 ]

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const BaseUrl = 'http://localhost:5000'
+const BaseUrl = 'http://172.16.25.20:5000'
 Vue.use(Vuex)
 
 const user = {
@@ -13,11 +13,16 @@ const user = {
       NickName: null,
       HeadImgUrl: null,
       loginStatus: null
-    }
+    },
+    otherUsersHeadImage: [],
+    selfHeadImage: null
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
       state.userInfo.loginStatus = payload
+    },
+    SET_SELF_HEAD_IMAGE: (state, payload) => {
+      state.selfHeadImage = `${BaseUrl}${payload}`
     },
     setUin (state, payload) {
       state.userInfo.uin = payload
@@ -82,8 +87,24 @@ const user = {
           }
           resolve(e.data)
         })
-      }
-      )
+      })
+    },
+    // 获取个人头像
+    getSelfHeadImage ({ commit }, payload) {
+      axios({
+        method: 'get',
+        url: `${BaseUrl}/wx/contact/get_head_img`,
+        params: {
+          uin: payload.uin,
+          username: payload.username,
+        },
+        withCredentials: true
+      }).then((e) => {
+        console.log(e)
+        if (e && e.data && e.data.code === 200) {
+          commit('SET_SELF_HEAD_IMAGE', e.data.data.FilePath)
+        }
+      })
     }
   }
 }

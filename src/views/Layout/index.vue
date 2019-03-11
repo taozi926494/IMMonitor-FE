@@ -35,7 +35,7 @@
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
                       <a href="javascript:void(0)">
-                        <Avatar shape="square" :src="headImgUrl ? headImgUrl : require('@/assets/images/headpic.png')" size="large" />
+                        <Avatar shape="square" :src="headImgUrl ? headImgUrl : selfHeadImage" size="large" />
                         <Icon class="avatar-icon" type="md-arrow-dropdown" />
                       </a>
                       <DropdownMenu slot="list">
@@ -178,7 +178,8 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'groups'
+      'groups',
+      'selfHeadImage'
     ]),
     rotateIcon () {
       return [
@@ -195,9 +196,9 @@ export default {
   },
   mounted () {
     console.log(this.userInfo.uin)
-    // if (!this.userInfo.uin) {
-    //   this.wxInit()
-    // }
+    if (!this.userInfo.uin) {
+      this.wxInit()
+    }
     // this.$store.state.groups = mock_groups
     // let msg = {
     //   msg_list: mock_msg_list,
@@ -226,7 +227,10 @@ export default {
     async wxInit () {
       try {
         let data = await this.$store.dispatch('wxInit')
-        console.log(data)
+        await this.$store.dispatch('getSelfHeadImage', {
+          uin: data.data.uin,
+          username: data.data.UserName
+        })
         if (data && data.code === 200) {
           this.getGroupContact()
         }
@@ -237,7 +241,15 @@ export default {
     async getGroupContact () {
       try {
         let groups_ret = await this.$store.dispatch('getGroupContact')
-        console.log(groups_ret)
+        groups_ret.data.map((group) => {
+          this.$store.dispatch('getGroupHeadImage', {
+            group_id: group.group_id,
+            username: group.UserName
+          }).then((groupHeadImage) => {
+            Object.assign(group, {'HeadImgUrl': groupHeadImage})
+          })
+          this.$store.commit('SET_GROUPS', groups_ret.data)
+        })
         this.syckCheck()
       } catch (error) {
         console.log(error)

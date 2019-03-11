@@ -10,7 +10,10 @@
       </p>
     </Drawer>
      <div class="chat-header">
-      <span>{{ group.NickName }}</span>
+      <span>
+        <img :src="group.HeadImgUrl" alt="">
+        <b>{{ group.NickName }}</b>
+      </span>
       <div
         @click="openGroupPeopleList"
         class="chat-groupNum">
@@ -28,7 +31,7 @@
                 :type="msg.Type"
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
-                :fileUrl='msg.FileUrl'
+                :fileUrl='msg.FilePath'
                 />
             </li>
           </ul>

@@ -90,11 +90,11 @@
             {{ formatTip(item.result_label) }}
           </a>
         </span>
-        <img :src="fileUrl" alt="">
+        <img :src="NewFileUrl" alt="">
       </div>
     </div>
     <div v-show='showPerviewImage' class="preview-image-box">
-      <img :src="fileUrl" alt="">
+      <img :src="NewFileUrl" alt="">
       <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
     </div>
   </div>
@@ -103,7 +103,7 @@
       <div
         @click='checkImage'
         class="chat-right">
-        <img :src="fileUrl" alt="">
+        <img :src="NewFileUrl" >
         <span v-show="isDanger">
           <a
             v-for="(item, index) in detectedArr"
@@ -117,7 +117,7 @@
       <img :src="require('../../assets/images/toux2.jpg')">
     </div>
     <div v-show='showPerviewImage' class="preview-image-box">
-      <img :src="fileUrl" alt="">
+      <img :src="NewFileUrl" >
       <CustormIcon @click="closePre" class="iconStyle" icon='icon-icon-close'/>
     </div>
   </div>
@@ -134,6 +134,11 @@ export default {
       leftAudioPlay: 'icon-goutongye_yuyin_you_00',
       rightAudioPlay: 'icon-goutongye_yuyin_zuo_00',
       showPerviewImage: false
+    }
+  },
+  computed: {
+    NewFileUrl: function () {
+      return `http://172.16.25.20:5000${this.fileUrl}`
     }
   },
   components: {
@@ -180,7 +185,6 @@ export default {
       this.showPerviewImage = true
     },
     closePre () {
-      console.log('????')
       this.showPerviewImage = false
     },
     formatTipContent (id) {
