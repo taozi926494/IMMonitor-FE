@@ -212,7 +212,9 @@ export default {
       'groups',
       'selfHeadImage',
       'otherUsersHeadImage',
-      'warningNum'
+      'warningNum',
+      'warningTime',
+      'warningMaxNum'
     ]),
     rotateIcon () {
       return [
@@ -358,7 +360,7 @@ export default {
       this.beforTime = null
       if (itemMsg.detectedArr.length > 0) {
         this.time = itemMsg.SendTime
-        this.beforTime = this.time - 30000
+        this.beforTime = this.time - this.warningTime
       }
       let currentGroup = this.groups.find((group) => {
         return group.group_id === itemMsg.group_id
@@ -367,7 +369,7 @@ export default {
         return item.SendTime > this.beforTime
       })
       this.$store.commit('SET_WARNING_NUM', rangeArr.length)
-      if (this.warningNum >= 3) {
+      if (this.warningNum >= this.warningMaxNum) {
         this.playWarningAudioFn()
         this.$Notice.warning({
           title: `群：${currentGroup.NickName}违规过多`,
