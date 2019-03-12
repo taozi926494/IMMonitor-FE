@@ -57,6 +57,9 @@
   align-items: center;
   justify-content: center;
 }
+.ivu-layout-content {
+  background-color: #F5F7F9 !important;
+}
 .layout{
     background: #f5f7f9;
     position: relative;
