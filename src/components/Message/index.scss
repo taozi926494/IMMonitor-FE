@@ -170,7 +170,7 @@ img {
 
   .audio-chat-box-left {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
 
     .chat-left {
@@ -229,7 +229,7 @@ img {
 
   .audio-chat-box-right {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
 
     .chat-right {

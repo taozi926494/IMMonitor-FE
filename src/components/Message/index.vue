@@ -1,6 +1,6 @@
 <template>
   <div v-if="responseStyle === 'left' && type === 'Text'" class="response-chat">
-    <img :src="require('../../assets/images/toux1.jpeg')" alt="">
+    <img :src="headImgUrl" alt="">
     <div class="chat-left">
       <p>{{ content }}</p>
       <span v-show="isDanger">
@@ -27,11 +27,11 @@
         </a>
       </span>
     </div>
-    <img :src="require('../../assets/images/toux2.jpg')" alt="">
+    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')" alt="">
   </div>
   <div v-else-if="responseStyle === 'left' && type === 'Audio'" class="response-audio-chat">
     <div class="audio-chat-box-left">
-      <img :src="require('../../assets/images/toux1.jpeg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
       <div
         @click='playAudioFn'
         class="chat-left">
@@ -69,7 +69,7 @@
         <b>{{ countTime }}s</b>
         <CustormIcon :icon='rightAudioPlay'/>
       </div>
-      <img :src="require('../../assets/images/toux2.jpg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
     </div>
     <div class="audioText-right">
       <p>{{ content }}</p>
@@ -77,7 +77,7 @@
   </div>
   <div v-else-if="responseStyle === 'left' && type === 'Image'" class="response-image-chat">
     <div class="image-chat-box-left">
-      <img :src="require('../../assets/images/toux1.jpeg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
       <div
         @click='checkImage'
         class="chat-left">
@@ -90,7 +90,7 @@
             {{ formatTip(item.result_label) }}
           </a>
         </span>
-        <img :src="fileUrl" alt="">
+        <img :src="NewFileUrl" alt="">
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
       <div
         @click='checkImage'
         class="chat-right">
-        <img :src="fileUrl" alt="">
+        <img :src="NewFileUrl" alt="">
         <span v-show="isDanger">
           <a
             v-for="(item, index) in detectedArr"
@@ -110,7 +110,7 @@
           </a>
         </span>
       </div>
-      <img :src="require('../../assets/images/toux2.jpg')">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
     </div>
   </div>
 </template>
@@ -125,6 +125,11 @@ export default {
     return {
       leftAudioPlay: 'icon-goutongye_yuyin_you_00',
       rightAudioPlay: 'icon-goutongye_yuyin_zuo_00',
+    }
+  },
+  computed: {
+    NewFileUrl: function () {
+      return `http://172.16.111.6:5000${this.fileUrl}`
     }
   },
   components: {
@@ -152,6 +157,10 @@ export default {
     },
     // 图片地址或者音频地址
     fileUrl: {
+      type: String
+    },
+    // 图像地址
+    headImgUrl: {
       type: String
     },
     countTime: {
@@ -225,7 +234,7 @@ export default {
       }
     },
     checkImage () {
-      this.$store.commit('SET_PREVIEW_IMG_URL', this.fileUrl)
+      this.$store.commit('SET_PREVIEW_IMG_URL', this.NewFileUrl)
     },
   }
 }

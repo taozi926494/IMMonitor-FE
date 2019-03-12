@@ -10,7 +10,10 @@
       </p>
     </Drawer>
      <div class="chat-header">
-      <span>{{ group.NickName }}</span>
+      <span>
+        <img :src="group.HeadImgUrl" alt="">
+        <b>{{ group.NickName }}</b>
+      </span>
       <div
         @click="openGroupPeopleList"
         class="chat-groupNum">
@@ -28,8 +31,9 @@
                 :type="msg.Type"
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
-                :fileUrl='"http://localhost:5000" + msg.FilePath '
-                 />
+                :fileUrl='msg.FilePath'
+                :headImgUrl='msg.UserHeadImage'
+                />
             </li>
           </ul>
         </div>
@@ -44,7 +48,6 @@
 <script>
 // import Icon from '../iconComponent'
 import './index.scss';
-import ChatAudio from '@/components/ChatAudio'
 import Message from '@/components/Message'
 import { mapGetters } from 'vuex'
 import CustormIcon from '@/components/CustormIcon'
@@ -66,6 +69,7 @@ export default {
     ...mapGetters(["userInfo", "groups"])
   },
   updated () {
+    console.log(this.groups)
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {
@@ -74,7 +78,6 @@ export default {
   ,
   components: {
     CustormIcon,
-    ChatAudio,
     Message
   },
   methods: {

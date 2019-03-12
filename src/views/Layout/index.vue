@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div class="layout">
         <Layout class="container">
@@ -6,15 +7,15 @@
                   <span>通讯软件危险监测系统</span>
                 </div>
                 <Menu :on-open-change="selectMenuFn" active-name="1-1" theme="dark" width="auto" :class="menuitemClasses">
-                    <MenuItem
-                    class="menuList"
-                    v-for="(item, index) in menu"
-                    :key="index"
-                    :name="item.name"
-                    :to="item.path">
-                        <Icon :type="item.icon" />
-                        <span>{{item.title}}</span>
-                    </MenuItem>
+                  <MenuItem
+                  class="menuList"
+                  v-for="(item, index) in menu"
+                  :key="index"
+                  :name="item.name"
+                  :to="item.path">
+                      <Icon :type="item.icon" />
+                      <span>{{item.title}}</span>
+                  </MenuItem>
                 </Menu>
             </Sider>
             <Layout>
@@ -27,14 +28,11 @@
                     </div>
                     <Button @click="doCheck">轮训检查</Button>
                     <Button @click="doGetMsg">接收消息</Button>
-                    <Button @click="doSelfHeadImg">自身头像</Button>
-                    <Button @click="doGroupHeadImg">群头像</Button>
-                    <Button @click="doMemberHeadImg">群成员头像</Button>
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
                       <a href="javascript:void(0)">
-                        <Avatar shape="square" :src="headImgUrl ? headImgUrl : require('@/assets/images/headpic.png')" size="large" />
+                        <Avatar shape="square" :src="selfHeadImage" size="large" />
                         <Icon class="avatar-icon" type="md-arrow-dropdown" />
                       </a>
                       <DropdownMenu slot="list">
@@ -170,8 +168,7 @@ export default {
         {title: '控制台', icon: 'ios-chatbubbles', name: '1-1', path: '/'},
         {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/grouplist'},
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
-      ],
-      headImgUrl: null
+      ]
     }
   },
   components: {
@@ -180,7 +177,9 @@ export default {
   computed: {
     ...mapGetters([
       'userInfo',
-      'groups'
+      'groups',
+      'selfHeadImage',
+      'otherUsersHeadImage'
     ]),
     rotateIcon () {
       return [
@@ -200,6 +199,14 @@ export default {
     if (!this.userInfo.uin) {
       this.wxInit()
     }
+    // this.$store.state.groups = mock_groups
+    // let msg = {
+    //   msg_list: mock_msg_list,
+    //   msg_list_detected: mock_msg_detect_list
+    // }
+    // console.log(msg)
+    // console.log(this.$store.state.groups)
+    // this.$store.commit('HANDLE_GROUP_MSG', msg)
   },
   methods: {
     // openDB (name) {
@@ -220,18 +227,29 @@ export default {
     async wxInit () {
       try {
         let data = await this.$store.dispatch('wxInit')
-        console.log(data)
+        await this.$store.dispatch('getSelfHeadImage', {
+          uin: data.data.uin,
+          username: data.data.UserName
+        })
         if (data && data.code === 200) {
           this.getGroupContact()
         }
       } catch (error) {
-
+        console.log(error)
       }
     },
     async getGroupContact () {
       try {
         let groups_ret = await this.$store.dispatch('getGroupContact')
-        console.log(groups_ret)
+        groups_ret.data.map((group) => {
+          this.$store.dispatch('getGroupHeadImage', {
+            group_id: group.group_id,
+            username: group.UserName
+          }).then((groupHeadImage) => {
+            Object.assign(group, {'HeadImgUrl': groupHeadImage})
+          })
+          this.$store.commit('SET_GROUPS', groups_ret.data)
+        })
         this.syckCheck()
       } catch (error) {
         console.log(error)
@@ -245,11 +263,14 @@ export default {
           // 2、4、6代表有新消息
           if (check_ret.data.message_status == 2 || check_ret.data.message_status == 4 || check_ret.data.message_status == 6) {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
-            if (msg_ret.code == 200) {
-              if (msg_ret.data) {
-                this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
-              }
-            }
+            this.getMegUserHeadImage(msg_ret)
+            console.log(msg_ret.data.group_msg_list)
+            // if (msg_ret.code == 200) {
+            //   if (msg_ret.data) {
+            //     this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
+            //   }
+            // }
+            console.log(this.groups)
             this.syckCheck()
           } else {
             //  msg_status 等于其他都是没有新消息，继续调用sync_check接口
@@ -264,8 +285,49 @@ export default {
         console.log('error', error)
       }
     },
+    // 获取最新消息后检查在store中是否有头像 没有就请求获取并存储
+    getMegUserHeadImage (data) {
+      if (data.data.group_msg_list.msg_list.length > 0) {
+        data.data.group_msg_list.msg_list.map((itemMsg) => {
+          let HeadPath = null
+          for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
+            if (
+              this.otherUsersHeadImage[i].username === itemMsg.FromUserName
+            ) {
+              HeadPath = this.otherUsersHeadImage[i].headPath
+              break
+            }
+          }
+          if (HeadPath) {
+            Object.assign(itemMsg, {'UserHeadImage': HeadPath})
+            this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
+          } else {
+            let chatRoomId = this.groups.find((e) => {
+              if (e.group_id === itemMsg.group_id) {
+                return e.EncryChatRoomId
+              }
+            })
+            this.$store.dispatch('getOtherHeadImage', {
+              group_id: itemMsg.group_id,
+              encry_chatroom_id: chatRoomId.EncryChatRoomId,
+              username: itemMsg.FromUserName,
+              user_nickname: itemMsg.FromUserNickName
+            }).then((headPath) => {
+              this.$store.commit('SET_OTHER_USER_HEAD_IMAGE', {
+                group_id: itemMsg.group_id,
+                username: itemMsg.FromUserName,
+                headPath: headPath
+              })
+              Object.assign(itemMsg, {'UserHeadImage': headPath})
+              this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
+              return
+            })
+          }
+        })
+      } 
+    },
     async doCheck() {
-    let check_ret = await this.$store.dispatch('syckCheck')
+      let check_ret = await this.$store.dispatch('syckCheck')
       console.log(check_ret)
     },
     async doGetMsg() {
@@ -274,56 +336,10 @@ export default {
       if (msg_ret.code == 200) {
         if (msg_ret.data) {
           this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
+          console.log(this.groups)
         }
       }
-    },
-    doSelfHeadImg() {
-      console.log('click')
-      var _self = this;
-       axios({
-          method: 'get',
-          url: 'http://localhost:5000/wx/contact/get_head_img',
-          params: {
-            uin: _self.userInfo.uin,
-            username: _self.userInfo.UserName,
-          },
-          withCredentials: true
-        }).then((e) => {
-          console.log(e)
-          _self.headImgUrl =  'http://localhost:5000' + e.data.data.FilePath
-        })
-    },
-    doGroupHeadImg() {
-      var _self = this;
-      axios({
-          method: 'get',
-          url: 'http://localhost:5000/wx/contact/get_head_img',
-          params: {
-            group_id: _self.groups[0].group_id,
-            username: _self.groups[0].UserName,
-          },
-          withCredentials: true
-        }).then((e) => {
-          _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
-        })
-    },
-    doMemberHeadImg() {
-      var _self = this;
-      axios({
-          method: 'get',
-          url: 'http://localhost:5000/wx/contact/get_member_head_img',
-          params: {
-            group_id: _self.groups[0].group_id,
-            encry_chatroom_id: _self.groups[0].EncryChatRoomId,
-            username: _self.groups[0].MemberList[0].UserName,
-            user_nickname: _self.groups[0].MemberList[0].NickName,
-          },
-          withCredentials: true
-        }).then((e) => {
-          _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
-        })
     }
   }
-  
 }
 </script>

@@ -1,7 +1,7 @@
 export default [
     {
       Uin: 0,
-      id: 1,
+      group_id: 1,
       UserName: '@@9b94b78c20eb2ec5ee564d1a85af7d8353a125090a434ba59afdf95998e5ffdb',
       NickName: '数据小群_ALL',
       msg_list: [],
@@ -132,7 +132,7 @@ export default [
     },
     {
       Uin: 0,
-      id: 2,
+      group_id: 2,
       UserName: '@@4f9a2a5d889d9ce52f587e6bd94a74d0b1e7ed28a629662c4eadf8ee03fdbaea',
       msg_list: [],
       NickName: '嘿嘿测试',
@@ -203,7 +203,7 @@ export default [
     }, 
     {
       Uin: 0,
-      id: 3,
+      group_id: 3,
       UserName: '@@f7b1e00484ea9d000263f5953e3fa8d3f762c082dabfe104f77c52ad615e0476',
       msg_list: [],
       NickName: 'home',
@@ -274,7 +274,7 @@ export default [
     },
     {
       Uin: 0,
-      id: 4,
+      group_id: 4,
       UserName: '@@27dd7442e6d1dcdecb181f84ef14a634ff6d50629bf19844c22bc1f50ee913e6',
       msg_list: [],
       NickName: '数据小群_WORK',
@@ -345,7 +345,7 @@ export default [
     },
     {
       Uin: 0,
-      id: 5,
+      group_id: 5,
       UserName: '@@522ca2c4eea91237088da1d02c8412dc58d2daeb07f0185a3464c7da6d9c387e',
       msg_list: [],
       NickName: '测试20181211',

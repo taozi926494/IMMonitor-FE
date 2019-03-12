@@ -1,34 +1,40 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const BaseUrl = 'http://localhost:5000'
+const BaseUrl = 'http://172.16.111.6:5000'
 Vue.use(Vuex)
 
 const user = {
   state: {
     userInfo: {
       uin: null,
-      UserName: null,
+      // UserName: null,
+      UserName: '@2f4aed76524f619be4e382173d80bfab',
       NickName: null,
       HeadImgUrl: null,
       loginStatus: null
-    }
+    },
+    otherUsersHeadImage: [],
+    selfHeadImage: null
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
       state.userInfo.loginStatus = payload
     },
-    setUin (state, payload) {
+    SET_SELF_HEAD_IMAGE: (state, payload) => {
+      state.selfHeadImage = payload
+    },
+    SET_OTHER_USER_HEAD_IMAGE: (state, payload) => {
+      state.otherUsersHeadImage.push(payload)
+    },
+    SET_UIN (state, payload) {
       state.userInfo.uin = payload
     },
-    setUserName (state, payload) {
+    SET_USER_NAME (state, payload) {
       state.userInfo.UserName = payload
     },
-    setNickName (state, payload) {
+    SET_NICK_NAME (state, payload) {
       state.userInfo.NickName = payload
-    },
-    setHeadImgUrl (state, payload) {
-      state.userInfo.HeadImgUrl = payload
     }
   },
   actions: {
@@ -75,14 +81,51 @@ const user = {
           withCredentials: true
         }).then((e) => {
           if (e && e.data && e.data.data) {
-            commit('setUin', e.data.data.uin)
-            commit('setUserName', e.data.data.UserName)
-            commit('setNickName', e.data.data.NickName)
+            commit('SET_UIN', e.data.data.uin)
+            commit('SET_USER_NAME', e.data.data.UserName)
+            commit('SET_NICK_NAME', e.data.data.NickName)
           }
           resolve(e.data)
         })
-      }
-      )
+      })
+    },
+    // 获取个人头像
+    getSelfHeadImage ({ commit }, payload) {
+      axios({
+        method: 'get',
+        url: `${BaseUrl}/wx/contact/get_head_img`,
+        params: {
+          uin: payload.uin,
+          username: payload.username,
+        },
+        withCredentials: true
+      }).then((e) => {
+        if (e && e.data && e.data.code === 200) {
+          commit('SET_OTHER_USER_HEAD_IMAGE', {
+            username: payload.username,
+            headPath: `${BaseUrl}${e.data.data.FilePath}`
+          })
+          commit('SET_SELF_HEAD_IMAGE', `${BaseUrl}${e.data.data.FilePath}`)
+        }
+      })
+    },
+    // 获取发送人的头像
+    getOtherHeadImage ({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: `${BaseUrl}/wx/contact/get_member_head_img`,
+          params: {
+            group_id: payload.group_id,
+            encry_chatroom_id: payload.encry_chatroom_id,
+            username: payload.username,
+            user_nickname: payload.user_nickname,
+          },
+          withCredentials: true
+        }).then((e) => {
+          resolve(`${BaseUrl}${e.data.data.FilePath}`)
+        })
+      })
     }
   }
 }
