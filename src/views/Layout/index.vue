@@ -5,7 +5,7 @@
                 <div class="project_name">
                   <span>通讯软件危险监测系统</span>
                 </div>
-                <Menu :on-open-change="selectMenuFn" active-name="1-1" theme="dark" width="auto" :class="menuitemClasses">
+                <Menu active-name="1-1" theme="dark" width="auto" :class="menuitemClasses">
                   <MenuItem
                   class="menuList"
                   v-for="(item, index) in menu"
@@ -25,8 +25,8 @@
                       <img src="@/assets/images/logo.png" alt="">
                       <span>国家工程实验室</span>
                     </div>
-                    <Button @click="doCheck">轮训检查</Button>
-                    <Button @click="doGetMsg">接收消息</Button>
+                    <!-- <Button @click="doCheck">轮训检查</Button>
+                    <Button @click="doGetMsg">接收消息</Button> -->
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
@@ -46,9 +46,29 @@
                 </Content>
             </Layout>
         </Layout>
+        <!-- 产生 警报声音 -->
+        <div class="originalAudio">
+          <audio
+            ref='audioEl'
+            autobuffer
+            controls="controls"
+            id="myAudio">
+            <source
+              src="../../assets/warning.mp3"
+              type="audio/mpeg">
+          </audio>
+        </div>
     </div>
 </template>
 <style lang="scss" scoped>
+.originalAudio{
+  width: 0;
+  height: 0;
+  audio{
+    width: 0;
+    height: 0;
+  }
+}
 .menuList{
   display: flex;
   align-items: center;
@@ -177,9 +197,12 @@ export default {
         {title: '控制台', icon: 'ios-chatbubbles', name: '1-1', path: '/'},
         {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/grouplist'},
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
-      ]
+      ],
+      time: null,
+      beforTime: null
     }
   },
+  
   components: {
     
   },
@@ -188,7 +211,8 @@ export default {
       'userInfo',
       'groups',
       'selfHeadImage',
-      'otherUsersHeadImage'
+      'otherUsersHeadImage',
+      'warningNum'
     ]),
     rotateIcon () {
       return [
@@ -207,29 +231,19 @@ export default {
     if (!this.userInfo.uin) {
       this.wxInit()
     }
-    // this.$store.state.groups = mock_groups
-    // let msg = {
-    //   msg_list: mock_msg_list,
-    //   msg_list_detected: mock_msg_detect_list
-    // }
-    // console.log(msg)
-    // console.log(this.$store.state.groups)
-    // this.$store.commit('HANDLE_GROUP_MSG', msg)
   },
   methods: {
-    // openDB (name) {
-    //   let request = window.indexedDB.open(name)
-    //   request.onerror = function (e) {
-    //     console.log(e)
-    //   }
-    //   request.onsuccess = function (e) {
-    //     return e.target.result
-    //   }
-    // },
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
     },
-    selectMenuFn (name) {
+    playWarningAudioFn () {
+      console.log('进去播放函数')
+      let audioEl = this.$refs.audioEl
+      console.log(audioEl.paused)
+      if (audioEl.paused) {
+        audioEl.play()
+        console.log('执行播放')
+      }
     },
     async wxInit () {
       try {
@@ -270,12 +284,9 @@ export default {
           // 2、4、6代表有新消息
           if (check_ret.data.message_status == 2 || check_ret.data.message_status == 4 || check_ret.data.message_status == 6) {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
-            this.getMegUserHeadImage(msg_ret)
-            // if (msg_ret.code == 200) {
-            //   if (msg_ret.data) {
-            //     this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
-            //   }
-            // }
+            if (msg_ret.code == 200 && msg_ret.data) {
+              this.getMegUserHeadImage(msg_ret.data)
+            }
             this.syckCheck()
           } else {
             //  msg_status 等于其他都是没有新消息，继续调用sync_check接口
@@ -292,8 +303,8 @@ export default {
     },
     // 获取最新消息后检查在store中是否有头像 没有就请求获取并存储
     getMegUserHeadImage (data) {
-      if (data.data.group_msg_list.msg_list.length > 0) {
-        data.data.group_msg_list.msg_list.map((itemMsg) => {
+      if (data.group_msg_list.msg_list.length > 0) {
+        data.group_msg_list.msg_list.map((itemMsg) => {
           let HeadPath = null
           for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
             if (
@@ -304,8 +315,13 @@ export default {
             }
           }
           if (HeadPath) {
-            Object.assign(itemMsg, {'UserHeadImage': HeadPath})
-            this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
+            Object.assign(itemMsg, {
+              'UserHeadImage': HeadPath,
+              'SendTime': (new Date()).valueOf()
+            })
+            this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
+            // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
+            this.checkWarningAlert(itemMsg)
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -323,13 +339,43 @@ export default {
                 username: itemMsg.FromUserName,
                 headPath: headPath
               })
-              Object.assign(itemMsg, {'UserHeadImage': headPath})
-              this.$store.commit('HANDLE_GROUP_MSG', data.data.group_msg_list)
+              Object.assign(itemMsg, {
+                'UserHeadImage': headPath,
+                'SendTime': (new Date()).valueOf()
+              })
+              this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
+              // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
+              this.checkWarningAlert(itemMsg)
               return
             })
           }
         })
       } 
+    },
+    // 提示警告 函数
+    checkWarningAlert (itemMsg) {
+      this.time = null
+      this.beforTime = null
+      if (itemMsg.detectedArr.length > 0) {
+        this.time = itemMsg.SendTime
+        this.beforTime = this.time - 30000
+      }
+      let currentGroup = this.groups.find((group) => {
+        return group.group_id === itemMsg.group_id
+      })
+      let rangeArr = currentGroup.msg_list.filter((item) => {
+        return item.SendTime > this.beforTime
+      })
+      this.$store.commit('SET_WARNING_NUM', rangeArr.length)
+      if (this.warningNum >= 3) {
+        this.playWarningAudioFn()
+        this.$Notice.warning({
+          title: `群：${currentGroup.NickName}违规过多`,
+          desc: `这个群有${this.warningNum}个警告`
+        });
+      } else {
+        this.$store.commit('RESET_WARNING_NUM')
+      }
     },
     async doCheck() {
       let check_ret = await this.$store.dispatch('syckCheck')

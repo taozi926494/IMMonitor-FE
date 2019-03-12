@@ -9,9 +9,16 @@ Vue.use(Vuex)
 const group = {
   state: {
     groups: [],
-    previewImgUrl: null
+    previewImgUrl: null,
+    warningNum: 0
   },
   mutations: {
+    SET_WARNING_NUM: (state, num) => {
+      state.warningNum = num
+    },
+    RESET_WARNING_NUM: (state) => {
+      state.warningNum = 0
+    },
     SET_GROUPS: (state, groups) => {
       state.groups = groups
     },

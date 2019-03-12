@@ -1,6 +1,6 @@
 <template>
   <div class="chat_page_container">
-    <Button class="get_msg" @click="get_msg">拉取新消息</Button>
+    <!-- <Button class="get_msg" @click="get_msg">拉取新消息</Button> -->
     <GroupPanel v-for="group in groups" :key="group.id" :group="group" class="chat_window" />
     <div v-show='previewImgUrl' class="preview-image-box" @click="$store.commit('SET_PREVIEW_IMG_URL', null)">
       <img :src="previewImgUrl" alt="">

@@ -3,7 +3,8 @@ const getters = {
   groups: state => state.group.groups,
   selfHeadImage: state => state.user.selfHeadImage,
   previewImgUrl: state => state.group.previewImgUrl,
-  otherUsersHeadImage: state => state.user.otherUsersHeadImage
+  otherUsersHeadImage: state => state.user.otherUsersHeadImage,
+  warningNum: state => state.group.warningNum
 }
 
 export default getters
