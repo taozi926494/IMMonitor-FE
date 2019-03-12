@@ -19,7 +19,9 @@ const user = {
       loginStatus: null
     },
     otherUsersHeadImage: [],
-    selfHeadImage: null
+    selfHeadImage: null,
+    warningTime: 30000,
+    warningMaxNum: 10
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
@@ -39,6 +41,12 @@ const user = {
     },
     SET_NICK_NAME (state, payload) {
       state.userInfo.NickName = payload
+    },
+    SET_WARNING_TIME (state, payload) {
+      state.warningTime = payload * 1000
+    },
+    SET_WARNING_MAX_NUM (state, payload) {
+      state.warningMaxNum = payload
     }
   },
   actions: {

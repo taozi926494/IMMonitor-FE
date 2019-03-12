@@ -69,7 +69,6 @@ export default {
     ...mapGetters(["userInfo", "groups"])
   },
   updated () {
-    console.log(this.groups)
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {
