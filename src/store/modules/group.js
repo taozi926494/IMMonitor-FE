@@ -2,7 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 // import mock_groups from '@/mock/groups'
-const BaseUrl = 'http://172.16.111.6:5000'
+// const BaseUrl = 'http://172.16.111.6:5000'
+// const BaseUrl = 'http://localhost:5000'
+
+// 上线
+const BaseUrl = ''
 
 Vue.use(Vuex)
 
@@ -94,7 +98,6 @@ const group = {
           },
           withCredentials: true
         }).then((e) => {
-          // _self.headImgUrl = 'http://localhost:5000' + e.data.data.FilePath
           if (e && e.data && e.data.code === 200) {
             // commit('SET_GROUP_HEAD_IMAGE', e.data.data)
             resolve(`${BaseUrl}${e.data.data.FilePath}`)

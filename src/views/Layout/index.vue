@@ -26,8 +26,8 @@
                       <img src="@/assets/images/logo.png" alt="">
                       <span>国家工程实验室</span>
                     </div>
-                    <Button @click="doCheck">轮训检查</Button>
-                    <Button @click="doGetMsg">接收消息</Button>
+                    <!-- <Button @click="doCheck">轮训检查</Button>
+                    <Button @click="doGetMsg">接收消息</Button> -->
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">

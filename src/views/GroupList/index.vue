@@ -68,20 +68,10 @@
       Top3 危险人物词云 
     </div>
     <Row :gutter="16">
-        <i-col :md="24" :lg="8">
-          <div class="wordcloud-header">
-            <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2534898382,1324912624&fm=26&gp=0.jpg" alt="">
-            <span>谢红韬</span>
-          </div>
-          <div id="wordcloud0" class="chart"></div>
-        </i-col>
-
-        <i-col :md="24" :lg="8">
-          <div id="wordcloud1" class="chart"></div>
-        </i-col>
-
-        <i-col :md="24" :lg="8">
-          <div id="wordcloud2" class="chart"></div>
+        <i-col :md="24" :lg="8" v-for="(wordcloud, index) in wordcloudArr" :key="index">
+          <WordCloud :name="wordcloud.name" 
+            :headImgUrl="wordcloud.headImgUrl"
+            :chartData="wordcloud.keywords" />
         </i-col>
     </Row>
 
@@ -94,21 +84,24 @@ import { mapGetters } from 'vuex'
 import axios from 'axios'
 import echarts from 'echarts'
 import echarts_wordcloud from 'echarts-wordcloud'
+import WordCloud from '@/components/MyCharts'
 import './index.scss'
 export default {
-  name: "home",
+  name: "grouplist",
   data () {
     return {
       statistic: {
         group_count: 0,
         msg_count: 0,
         detect_count: 0,
-        msg_percent: 0
-      }
+        msg_percent: 0,
+      },
+      wordcloudArr: Array
     }
   },
   components: {
-    countTo
+    countTo,
+    WordCloud
   },
   computed: {
     ...mapGetters(["userInfo", "groups"])
@@ -126,9 +119,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/statistic',
         params: {
-          uin: _self.userInfo.uin,
-          // uin: 2879490841,
-          username: _self.userInfo.UserName,
+          // uin: _self.userInfo.uin,
+          uin: 2879490841
         },
         withCredentials: true
       }).then((res) => {
@@ -144,8 +136,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/all_group_label_count',
         params: {
-          uin: _self.userInfo.uin,
-          // uin: 2879490841,
+          // uin: _self.userInfo.uin,
+          uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {
@@ -159,8 +151,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/all_member_danger',
         params: {
-          uin: _self.userInfo.uin,
-          // uin: 2879490841,
+          // uin: _self.userInfo.uin,
+          uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {
@@ -168,60 +160,61 @@ export default {
         _self._drawColumn(res.data.data)
       })
     },
+    HandleDataWordCloud(wordcloud) {
+      /*
+                                 [
+        {                          {
+        "Taoz": {                    name: "Taoz",
+          "keywords": {              headImgUrl: null   
+            "垃圾": 2                 keywords: [
+          }                            {
+        },               =>              name: '垃圾',
+        "袁公萍": {                       value: 2
+          "keywords": {                },
+            "操他妈": 1,               ...
+            "傻逼": 2,                ]
+          }                        },
+        }                        ...
+                                ]
+      */
+      
+      // 先转为数组
+      let wordcloudArr = []
+      for (let member in wordcloud) {
+        let kwArr = []
+        for (let kw in wordcloud[member].keywords) {
+          let t = {
+            name : null,
+            value: 0
+          }
+          t.name = kw
+          t.value = wordcloud[member].keywords[kw]
+          kwArr.push(t)
+        }
+        let tmp = {
+          name: member,
+          keywords: kwArr
+        }
+        wordcloudArr.push(tmp)
+      }
+      // 再排序取出最前面的三个
+      wordcloudArr = wordcloudArr.sort((a, b) => {
+        return b.keywords.length - a.keywords.length
+      })
+      return wordcloudArr.slice(0, 3)
+    },
     getWordCloud() {
       var _self = this;
       axios({
         method: 'get',
         url: 'http://localhost:5000/analysis/all_member_wordcloud',
         params: {
-          uin: _self.userInfo.uin,
-
-          // uin: 2879490841,
+          // uin: _self.userInfo.uin,
+          uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {
-        // {
-        //   "Taoz": {
-        //     "keywords": {
-        //       "垃圾": 2
-        //     }
-        //   }, 
-        //   "袁公萍": {
-        //     "keywords": {
-        //       "操他妈": 1, 
-        //       "傻逼": 2, 
-        //     }
-        //   }
-        let wordcloud = res.data.data
-        // 先转为数组
-        let wordcloudArr = []
-        for (let member in wordcloud) {
-          let kwArr = []
-          for (let kw in wordcloud[member].keywords) {
-            let t = {
-              name : null,
-              value: 0
-            }
-            t.name = kw
-            t.value = wordcloud[member].keywords[kw]
-            kwArr.push(t)
-          }
-          let tmp = {
-            name: member,
-            keywords: kwArr
-          }
-          wordcloudArr.push(tmp)
-        }
-        // 再排序取出最前面的三个
-        wordcloudArr.sort((a, b) => {
-          return b.keywords.length - a.keywords.length
-        })
-        wordcloudArr = wordcloudArr.slice(0, 3)
-        wordcloudArr.map((ele, index) => {
-          if (ele.keywords.length > 0) {
-            _self._drawWordCloud('wordcloud' + index, ele.keywords)
-          }
-        })
+        _self.wordcloudArr = this.HandleDataWordCloud(res.data.data)
       })
     },
     _drawPie(data) {
