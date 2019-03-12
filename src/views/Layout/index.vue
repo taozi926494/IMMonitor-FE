@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
     <div class="layout">
         <Layout class="container">
@@ -58,9 +57,6 @@
 .ivu-layout-content {
   background-color: #F5F7F9 !important;
 }
-// .ivu-menu-item-selected{
-//   color: #fff!important;
-// }
 .iconStyle::before{
   font-size: 20px;
 }
@@ -172,7 +168,6 @@
 // import axios from 'axios'
 // import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
-import CoustormIcon from '@/components/CustormIcon'
 export default {
   name: 'IndexPage',
   data () {
@@ -186,7 +181,7 @@ export default {
     }
   },
   components: {
-    CoustormIcon
+    
   },
   computed: {
     ...mapGetters([
@@ -209,7 +204,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.userInfo.uin)
     if (!this.userInfo.uin) {
       this.wxInit()
     }
@@ -236,7 +230,6 @@ export default {
       this.$refs.side1.toggleCollapse()
     },
     selectMenuFn (name) {
-      console.log(name)
     },
     async wxInit () {
       try {
@@ -278,13 +271,11 @@ export default {
           if (check_ret.data.message_status == 2 || check_ret.data.message_status == 4 || check_ret.data.message_status == 6) {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
             this.getMegUserHeadImage(msg_ret)
-            console.log(msg_ret.data.group_msg_list)
             // if (msg_ret.code == 200) {
             //   if (msg_ret.data) {
             //     this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
             //   }
             // }
-            console.log(this.groups)
             this.syckCheck()
           } else {
             //  msg_status 等于其他都是没有新消息，继续调用sync_check接口
@@ -342,15 +333,12 @@ export default {
     },
     async doCheck() {
       let check_ret = await this.$store.dispatch('syckCheck')
-      console.log(check_ret)
     },
     async doGetMsg() {
       let msg_ret = await this.$store.dispatch('getGroupMsg')
-       console.log(msg_ret)
       if (msg_ret.code == 200) {
         if (msg_ret.data) {
           this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
-          console.log(this.groups)
         }
       }
     }
