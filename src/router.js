@@ -4,6 +4,7 @@ import Console from './views/Console'
 import Layout from './views/Layout'
 import Login from './views/Login'
 import GroupList from './views/GroupList'
+import User from './views/User'
 
 Vue.use(Router)
 
@@ -27,11 +28,16 @@ export default new Router({
           name: 'grouplist',
           component: GroupList
         },
+        {
+          path: '/user',
+          name: 'user',
+          component: User
+        },
       ]
     },
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: Login
     },
     {

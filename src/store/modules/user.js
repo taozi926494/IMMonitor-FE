@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const BaseUrl = 'http://172.16.111.6:5000'
+// const BaseUrl = 'http://172.16.111.6:5000'
+// const BaseUrl = 'http://localhost:5000'
+
+// 上线
+const BaseUrl = ''
 Vue.use(Vuex)
 
 const user = {
