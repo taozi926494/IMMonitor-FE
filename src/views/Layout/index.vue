@@ -13,7 +13,7 @@
                   :key="index"
                   :name="item.name"
                   :to="item.path">
-                      <Icon :type="item.icon" />
+                      <icon class="iconStyle" :type='item.icon' />
                       <span>{{item.title}}</span>
                   </MenuItem>
                 </Menu>
@@ -58,6 +58,18 @@
 .ivu-layout-content {
   background-color: #F5F7F9 !important;
 }
+// .ivu-menu-item-selected{
+//   color: #fff!important;
+// }
+.iconStyle::before{
+  font-size: 20px;
+}
+.ivu-menu-item{
+  font-size: 15px;
+  i{
+    margin-right: 0;
+  }
+}
 .layout{
     background: #f5f7f9;
     position: relative;
@@ -78,6 +90,7 @@
       width: 100%;
       box-sizing: border-box;
       span{
+        font-size: 18px;
         padding: 0 16px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -156,9 +169,10 @@
 </style>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 // import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
+import CoustormIcon from '@/components/CustormIcon'
 export default {
   name: 'IndexPage',
   data () {
@@ -172,7 +186,7 @@ export default {
     }
   },
   components: {
-    
+    CoustormIcon
   },
   computed: {
     ...mapGetters([

@@ -8,7 +8,7 @@ import GroupList from './views/GroupList'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -31,7 +31,7 @@ export default new Router({
     },
     {
       path: '/login',
-      name: '',
+      name: 'Login',
       component: Login
     },
     {
