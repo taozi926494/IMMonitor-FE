@@ -1,9 +1,15 @@
+.ivu-card {
+  height: 360px;
+  margin-bottom: 15px;
+  text-align: left;
+}
 .userinfo-card{
   position: relative;
-  width: 340px;
   height: 360px;
   .username {
     font-family: STLiti; font-size: 28px;
+    text-align: left;
+    padding-left: 150px;
   }
   .ivu-card-body {
     padding: 0;

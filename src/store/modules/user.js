@@ -21,7 +21,8 @@ const user = {
     otherUsersHeadImage: [],
     selfHeadImage: null,
     warningTime: 5000,
-    warningMaxNum: 2
+    warningMaxNum: 2,
+    warningTipDuration: 10  // 报警提示框弹出时长
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
@@ -43,10 +44,13 @@ const user = {
       state.userInfo.NickName = payload
     },
     SET_WARNING_TIME (state, payload) {
-      state.warningTime = payload * 1000
+      state.warningTime = payload
     },
     SET_WARNING_MAX_NUM (state, payload) {
       state.warningMaxNum = payload
+    },
+    SET_WARNING_TIP_DURATION(state, duration) {
+      state.warningTipDuration = duration
     }
   },
   actions: {

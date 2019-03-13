@@ -14,20 +14,31 @@ const group = {
   state: {
     groups: [],
     previewImgUrl: null,
-    warningNum: 0
+    warningGroupId: null
   },
   mutations: {
-    SET_WARNING_NUM: (state, num) => {
-      state.warningNum = num
-    },
-    RESET_WARNING_NUM: (state) => {
-      state.warningNum = 0
+    SET_WARNING_GROUPID: (state, groupid) => {
+      state.warningGroupId = groupid
     },
     SET_GROUPS: (state, groups) => {
       state.groups = groups
     },
     SET_PREVIEW_IMG_URL: (state, previewImgUrl) => {
       state.previewImgUrl = previewImgUrl
+    },
+    SET_TOP: (state, id) => {
+      let _group_index
+      state.groups.find((group, index) => {
+        console.log(group.group_id, id)
+        if (group.group_id === id) {
+          _group_index = index
+        }
+      })
+      console.log('group index', _group_index)
+      let group_top = state.groups.splice(_group_index, 1)[0]
+      console.log('group_top', group_top)
+      state.groups.unshift(group_top)
+      console.log(state.groups)
     },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
       if (msg_dict) {
@@ -43,6 +54,11 @@ const group = {
           for (let j = 0; j < state.groups.length; j++) {
             if (msg.group_id == state.groups[j].group_id) {
               state.groups[j].msg_list.push(msg)
+              if (!state.groups[j].hasOwnProperty('dangerCount')) {
+                Vue.set(state.groups[j], 'dangerCount', msg.detectedArr.length)
+              } else {
+                state.groups[j].dangerCount += msg.detectedArr.length
+              }
             }
           }
         }
