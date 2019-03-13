@@ -29,16 +29,12 @@ const group = {
     SET_TOP: (state, id) => {
       let _group_index
       state.groups.find((group, index) => {
-        console.log(group.group_id, id)
         if (group.group_id === id) {
           _group_index = index
         }
       })
-      console.log('group index', _group_index)
       let group_top = state.groups.splice(_group_index, 1)[0]
-      console.log('group_top', group_top)
       state.groups.unshift(group_top)
-      console.log(state.groups)
     },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
       if (msg_dict) {

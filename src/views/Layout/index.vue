@@ -25,8 +25,6 @@
                       <img src="@/assets/images/logo.png" alt="">
                       <span>国家工程实验室</span>
                     </div>
-                    <!-- <Button @click="doCheck">轮训检查</Button>
-                    <Button @click="doGetMsg">接收消息</Button> -->
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
@@ -210,8 +208,6 @@
 
 <script>
 import Vue from 'vue'
-// import axios from 'axios'
-// import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
 export default {
   name: 'IndexPage',
@@ -332,9 +328,7 @@ export default {
         data.group_msg_list.msg_list.map((itemMsg) => {
           let HeadPath = null
           for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
-            if (
-              this.otherUsersHeadImage[i].username === itemMsg.FromUserName
-            ) {
+            if (this.otherUsersHeadImage[i].username === itemMsg.FromUserName) {
               HeadPath = this.otherUsersHeadImage[i].headPath
               break
             }
@@ -343,10 +337,8 @@ export default {
            *  给每一条消息添加头像url及时间
            */
           if (HeadPath) {
-            Object.assign(itemMsg, {
-              'UserHeadImage': HeadPath,
-              'SendTime': (new Date()).valueOf()
-            })
+            Vue.set(itemMsg, 'UserHeadImage', HeadPath)
+            Vue.set(itemMsg, 'SendTime', (new Date()).valueOf())
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -364,10 +356,8 @@ export default {
                 username: itemMsg.FromUserName,
                 headPath: headPath
               })
-              Object.assign(itemMsg, {
-                'UserHeadImage': headPath,
-                'SendTime': (new Date()).valueOf()
-              })
+              Vue.set(itemMsg, 'UserHeadImage', headPath)
+              Vue.set(itemMsg, 'SendTime', (new Date()).valueOf())
               return
             })
           }

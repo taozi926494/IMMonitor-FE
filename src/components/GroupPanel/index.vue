@@ -10,8 +10,11 @@
       </p>
     </Drawer>
     <div class="Rate-box">
-      <div class="immonitor-text">违规指数：</div>
-      <Rate disabled v-model="rateVaule" />
+      <div class="rate-left">
+        <div class="immonitor-text">违规指数：</div>
+        <Rate disabled v-model="rateVaule" />
+      </div>
+      <span>详情</span>
     </div>
      <div class="chat-header">
       <span>
@@ -75,7 +78,7 @@ export default {
       // animate动画
       css_animated: false,
       css_heartBeat: false,
-      valueDisabled: 2
+      css_slideInUp: false
     }
   },
   computed: {

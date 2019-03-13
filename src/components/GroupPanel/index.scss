@@ -33,9 +33,25 @@
     left: 0;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    .immonitor-text{
-      font-size: 15px;
+    justify-content: space-between;
+    .rate-left{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      .immonitor-text{
+        font-size: 15px;
+      }
+    }
+    span{
+      font-size: 16px;
+      font-weight: 520;
+      padding: 0 6px;
+      box-sizing: border-box;
+      cursor: pointer;
+      color: #ff5e00;
+      &:hover{
+        color: #ff5e00c7;
+      }
     }
   }
 
