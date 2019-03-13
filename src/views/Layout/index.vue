@@ -42,7 +42,12 @@
                   </div>
                 </Header>
                 <Content :style="{margin: '1px', background: '#fff', width: '100%', overflow: 'scroll', padding: '20px'}">
-                  <router-view/>
+                  <router-view>
+                  </router-view>
+                  <Spin class="loadingStyle" v-if='groups.length > 0 ? false : true'>
+                    <Icon type="ios-loading" size=38 class="demo-spin-icon-load"></Icon>
+                    <div class="text">{{ loadingStatus }}...</div>
+                  </Spin>
                 </Content>
             </Layout>
         </Layout>
@@ -61,6 +66,25 @@
     </div>
 </template>
 <style lang="scss" scoped>
+.loadingStyle{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+  }
+  .text{
+    font-size: 16px;
+    margin-top: 8px;
+  }
+}
 .originalAudio{
   width: 0;
   height: 0;
@@ -199,7 +223,8 @@ export default {
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
       ],
       time: null,
-      beforTime: null
+      beforTime: null,
+      loadingStatus: '登录成功'
     }
   },
   
@@ -229,9 +254,10 @@ export default {
       ]
     }
   },
-  mounted () {
+  created () {
     if (!this.userInfo.uin) {
       this.wxInit()
+      this.loadingStatus = '初始化个人信息'
     }
   },
   methods: {
@@ -239,12 +265,9 @@ export default {
       this.$refs.side1.toggleCollapse()
     },
     playWarningAudioFn () {
-      console.log('进去播放函数')
       let audioEl = this.$refs.audioEl
-      console.log(audioEl.paused)
       if (audioEl.paused) {
         audioEl.play()
-        console.log('执行播放')
       }
     },
     async wxInit () {
@@ -256,6 +279,7 @@ export default {
         })
         if (data && data.code === 200) {
           this.getGroupContact()
+          this.loadingStatus = '获取群数据中'
         }
       } catch (error) {
         console.log(error)
