@@ -312,6 +312,8 @@ export default {
             let msg_ret = await this.$store.dispatch('getGroupMsg')
             if (msg_ret.code == 200 && msg_ret.data) {
               this.getMegUserHeadImage(msg_ret.data)
+              // this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
+              // this.checkWarningAlert()
             }
             this.syckCheck()
           } else {
@@ -330,6 +332,7 @@ export default {
     // 获取最新消息后检查在store中是否有头像 没有就请求获取并存储
     getMegUserHeadImage (data) {
       if (data.group_msg_list.msg_list.length > 0) {
+        // 添加头像的
         data.group_msg_list.msg_list.map((itemMsg) => {
           let HeadPath = null
           for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
@@ -345,9 +348,6 @@ export default {
               'UserHeadImage': HeadPath,
               'SendTime': (new Date()).valueOf()
             })
-            this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
-            // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
-            this.checkWarningAlert(itemMsg)
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -369,30 +369,44 @@ export default {
                 'UserHeadImage': headPath,
                 'SendTime': (new Date()).valueOf()
               })
-              this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
-              // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
-              this.checkWarningAlert(itemMsg)
               return
             })
           }
         })
-      } 
+        this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
+        data.group_msg_list.msg_list.map((itemMsg) => {
+          // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
+          this.checkWarningAlert(itemMsg)
+        })
+      }
+      // 在新的groups被更新后进行判断谁的违规最多，给星打标记
+      // this.checkWarningRate()
+      // console.log('我被执行了')
     },
     // 提示警告 函数
     checkWarningAlert (itemMsg) {
       this.time = null
       this.beforTime = null
+      console.log(itemMsg)
       if (itemMsg.detectedArr.length > 0) {
         this.time = itemMsg.SendTime
         this.beforTime = this.time - this.warningTime
       }
+      console.log(this.time)
+      console.log(this.beforTime)
       let currentGroup = this.groups.find((group) => {
         return group.group_id === itemMsg.group_id
       })
       let rangeArr = currentGroup.msg_list.filter((item) => {
         return item.SendTime > this.beforTime
       })
-      this.$store.commit('SET_WARNING_NUM', rangeArr.length)
+      console.log(rangeArr)
+      rangeArr.map((item) => {
+        console.log(item)
+        if (item.detectedArr.length > 0) {
+          this.$store.commit('SET_WARNING_NUM', this.warningNum + 1)
+        }
+      })
       if (this.warningNum >= this.warningMaxNum) {
         this.playWarningAudioFn()
         this.$Notice.warning({
@@ -403,6 +417,21 @@ export default {
         this.$store.commit('RESET_WARNING_NUM')
       }
     },
+    // 判断谁的违规最多 函数
+    // checkWarningRate () {
+    //   let groupsWarningArr = []
+    //   console.log(this.groups)
+    //   this.groups.map((item, index) => {
+    //     console.log(item)
+    //     let warning_num = 0
+    //     item.msg_list.map((ite) => {
+    //       if (ite.detectedArr.length > 0) {
+    //         warning_num++
+    //       }
+    //     })
+    //     // groupsWarningArr[index] = warning_num
+    //   })
+    // },
     async doCheck() {
       let check_ret = await this.$store.dispatch('syckCheck')
     },

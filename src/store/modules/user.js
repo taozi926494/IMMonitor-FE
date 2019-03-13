@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-// const BaseUrl = 'http://172.16.111.6:5000'
+const BaseUrl = 'http://172.16.111.6:5000'
 // const BaseUrl = 'http://localhost:5000'
 
 // 上线
-const BaseUrl = ''
+// const BaseUrl = ''
 Vue.use(Vuex)
 
 const user = {
@@ -20,8 +20,8 @@ const user = {
     },
     otherUsersHeadImage: [],
     selfHeadImage: null,
-    warningTime: 30000,
-    warningMaxNum: 10
+    warningTime: 5000,
+    warningMaxNum: 2
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {

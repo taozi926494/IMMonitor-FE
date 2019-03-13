@@ -9,8 +9,16 @@
         <span>{{ groupMember.NickName }}</span>
       </p>
     </Drawer>
+    <div class="Rate-box">
+      <div class="immonitor-text">违规指数：</div>
+      <Rate disabled v-model="valueDisabled" />
+    </div>
      <div class="chat-header">
       <span>
+        <div class="neverTop-box">
+          <CustormIcon class="iconStyle" icon='icon-neverTop'/>
+          <span>置顶</span>
+        </div>
         <img :src="group.HeadImgUrl" alt="">
         <b>{{ group.NickName }}</b>
       </span>
@@ -62,7 +70,8 @@ export default {
       introduct: '',
       source: 'http://music.163.com/song/media/outer/url?id=431795489.mp3',
       altogetherTimer: null, // 音频总时长
-      accomplishData: null // 当前播放进度比
+      accomplishData: null, // 当前播放进度比
+      valueDisabled: 2
     }
   },
   computed: {
