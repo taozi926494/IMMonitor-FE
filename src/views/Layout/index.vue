@@ -198,8 +198,6 @@ export default {
         {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/grouplist'},
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
       ],
-      time: null,
-      beforTime: null
     }
   },
   
@@ -212,9 +210,9 @@ export default {
       'groups',
       'selfHeadImage',
       'otherUsersHeadImage',
-      'warningNum',
       'warningTime',
-      'warningMaxNum'
+      'warningMaxNum',
+      'warningTipDuration'
     ]),
     rotateIcon () {
       return [
@@ -239,12 +237,9 @@ export default {
       this.$refs.side1.toggleCollapse()
     },
     playWarningAudioFn () {
-      console.log('进去播放函数')
       let audioEl = this.$refs.audioEl
-      console.log(audioEl.paused)
       if (audioEl.paused) {
         audioEl.play()
-        console.log('执行播放')
       }
     },
     async wxInit () {
@@ -305,7 +300,7 @@ export default {
     },
     // 获取最新消息后检查在store中是否有头像 没有就请求获取并存储
     getMegUserHeadImage (data) {
-      if (data.group_msg_list.msg_list.length > 0) {
+       if (data.group_msg_list.msg_list.length > 0) {
         data.group_msg_list.msg_list.map((itemMsg) => {
           let HeadPath = null
           for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
@@ -316,14 +311,15 @@ export default {
               break
             }
           }
+
+          /**
+           *  给每一条消息添加头像url及时间
+           */
           if (HeadPath) {
             Object.assign(itemMsg, {
               'UserHeadImage': HeadPath,
               'SendTime': (new Date()).valueOf()
             })
-            this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
-            // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
-            this.checkWarningAlert(itemMsg)
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -345,50 +341,39 @@ export default {
                 'UserHeadImage': headPath,
                 'SendTime': (new Date()).valueOf()
               })
-              this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
-              // 判断新的消息是否有违规 如果有违规 那么查找此消息前30s有几条违规消息 大于6条 提示警告
-              this.checkWarningAlert(itemMsg)
               return
             })
           }
         })
-      } 
-    },
-    // 提示警告 函数
-    checkWarningAlert (itemMsg) {
-      this.time = null
-      this.beforTime = null
-      if (itemMsg.detectedArr.length > 0) {
-        this.time = itemMsg.SendTime
-        this.beforTime = this.time - this.warningTime
-      }
-      let currentGroup = this.groups.find((group) => {
-        return group.group_id === itemMsg.group_id
-      })
-      let rangeArr = currentGroup.msg_list.filter((item) => {
-        return item.SendTime > this.beforTime
-      })
-      this.$store.commit('SET_WARNING_NUM', rangeArr.length)
-      if (this.warningNum >= this.warningMaxNum) {
-        this.playWarningAudioFn()
-        this.$Notice.warning({
-          title: `群：${currentGroup.NickName}违规过多`,
-          desc: `这个群有${this.warningNum}个警告`
-        });
-      } else {
-        this.$store.commit('RESET_WARNING_NUM')
+        this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
+        this.checkWarningAlert(this.groups)
       }
     },
-    async doCheck() {
-      let check_ret = await this.$store.dispatch('syckCheck')
-    },
-    async doGetMsg() {
-      let msg_ret = await this.$store.dispatch('getGroupMsg')
-      if (msg_ret.code == 200) {
-        if (msg_ret.data) {
-          this.$store.commit('HANDLE_GROUP_MSG', msg_ret.data.group_msg_list)
+    checkWarningAlert (groups) {
+      groups.map((group) => {
+        // 当前时间的前n秒
+        let danger_msg_counter = 0;
+        let beforTime =new Date().valueOf() - this.warningTime
+        for (let i = 0; i < group.msg_list.length; i++) {
+          let msg = group.msg_list[i]
+          if (msg.SendTime > beforTime) {
+            if (msg.detectedArr.length > 0){
+              ++danger_msg_counter;
+            } else {
+              break;
+            }
+          }
         }
-      }
+        if (danger_msg_counter >= this.warningMaxNum) {
+          this.playWarningAudioFn()
+          this.$Notice.warning({
+            title: `群：${group.NickName}近期违规消息过多`,
+            desc: `这个群有${danger_msg_counter}个警告`,
+            duration: this.warningTipDuration
+          });
+          this.$store.commit('SET_WARNING_GROUPID', group.group_id)
+        }
+      }) 
     }
   }
 }

@@ -119,8 +119,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/statistic',
         params: {
-          // uin: _self.userInfo.uin,
-          uin: 2879490841
+          uin: _self.userInfo.uin,
+          // uin: 2879490841
         },
         withCredentials: true
       }).then((res) => {
@@ -136,8 +136,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/all_group_label_count',
         params: {
-          // uin: _self.userInfo.uin,
-          uin: 2879490841,
+          uin: _self.userInfo.uin,
+          // uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {
@@ -151,8 +151,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/all_member_danger',
         params: {
-          // uin: _self.userInfo.uin,
-          uin: 2879490841,
+          uin: _self.userInfo.uin,
+          // uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {
@@ -209,8 +209,8 @@ export default {
         method: 'get',
         url: 'http://localhost:5000/analysis/all_member_wordcloud',
         params: {
-          // uin: _self.userInfo.uin,
-          uin: 2879490841,
+          uin: _self.userInfo.uin,
+          // uin: 2879490841,
         },
         withCredentials: true
       }).then((res) => {

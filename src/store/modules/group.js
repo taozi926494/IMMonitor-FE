@@ -3,10 +3,10 @@ import Vuex from 'vuex'
 import axios from 'axios'
 // import mock_groups from '@/mock/groups'
 // const BaseUrl = 'http://172.16.111.6:5000'
-// const BaseUrl = 'http://localhost:5000'
+const BaseUrl = 'http://localhost:5000'
 
 // 上线
-const BaseUrl = ''
+// const BaseUrl = ''
 
 Vue.use(Vuex)
 
@@ -14,14 +14,11 @@ const group = {
   state: {
     groups: [],
     previewImgUrl: null,
-    warningNum: 0
+    warningGroupId: null
   },
   mutations: {
-    SET_WARNING_NUM: (state, num) => {
-      state.warningNum = num
-    },
-    RESET_WARNING_NUM: (state) => {
-      state.warningNum = 0
+    SET_WARNING_GROUPID: (state, groupid) => {
+      state.warningGroupId = groupid
     },
     SET_GROUPS: (state, groups) => {
       state.groups = groups

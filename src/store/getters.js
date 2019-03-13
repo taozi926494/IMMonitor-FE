@@ -4,9 +4,10 @@ const getters = {
   selfHeadImage: state => state.user.selfHeadImage,
   previewImgUrl: state => state.group.previewImgUrl,
   otherUsersHeadImage: state => state.user.otherUsersHeadImage,
-  warningNum: state => state.group.warningNum,
   warningTime: state => state.user.warningTime,
-  warningMaxNum: state => state.user.warningMaxNum
+  warningMaxNum: state => state.user.warningMaxNum,
+  warningTipDuration: state => state.user.warningTipDuration,
+  warningGroupId: state => state.group.warningGroupId
 }
 
 export default getters

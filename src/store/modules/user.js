@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 // const BaseUrl = 'http://172.16.111.6:5000'
-// const BaseUrl = 'http://localhost:5000'
+const BaseUrl = 'http://localhost:5000'
 
 // 上线
-const BaseUrl = ''
+// const BaseUrl = ''
 Vue.use(Vuex)
 
 const user = {
@@ -20,8 +20,9 @@ const user = {
     },
     otherUsersHeadImage: [],
     selfHeadImage: null,
-    warningTime: 30000,
-    warningMaxNum: 10
+    warningTime: 5000,
+    warningMaxNum: 2,
+    warningTipDuration: 10  // 报警提示框弹出时长
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
@@ -43,10 +44,13 @@ const user = {
       state.userInfo.NickName = payload
     },
     SET_WARNING_TIME (state, payload) {
-      state.warningTime = payload * 1000
+      state.warningTime = payload
     },
     SET_WARNING_MAX_NUM (state, payload) {
       state.warningMaxNum = payload
+    },
+    SET_WARNING_TIP_DURATION(state, duration) {
+      state.warningTipDuration = duration
     }
   },
   actions: {

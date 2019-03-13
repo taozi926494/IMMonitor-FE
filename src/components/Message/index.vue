@@ -130,10 +130,10 @@ export default {
   computed: {
     NewFileUrl: function () {
       // return `http://172.16.111.6:5000${this.fileUrl}`
-      // return `http://localhost:5000${this.fileUrl}`
+      return `http://localhost:5000${this.fileUrl}`
 
       // 上线
-      return this.fileUrl
+      // return this.fileUrl
     }
   },
   components: {

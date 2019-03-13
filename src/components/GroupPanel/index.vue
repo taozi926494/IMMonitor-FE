@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window-container">
+  <div class="chat-window-container" :class="{ animated: css_animated, heartBeat: css_heartBeat }" @animationend="delteAnimation">
     <Drawer :title="`${group.NickName}（成员列表）`" :closable="false" v-model="showGroupList">
       <p
       v-for="(groupMember, index) in group.MemberList"
@@ -47,6 +47,7 @@
 
 <script>
 // import Icon from '../iconComponent'
+import 'animate.css'
 import './index.scss';
 import Message from '@/components/Message'
 import { mapGetters } from 'vuex'
@@ -62,27 +63,49 @@ export default {
       introduct: '',
       source: 'http://music.163.com/song/media/outer/url?id=431795489.mp3',
       altogetherTimer: null, // 音频总时长
-      accomplishData: null // 当前播放进度比
+      accomplishData: null, // 当前播放进度比
+
+      // animate动画
+      css_animated: false,
+      css_heartBeat: false
     }
   },
   computed: {
-    ...mapGetters(["userInfo", "groups"])
+    ...mapGetters(["userInfo", "groups", "warningGroupId"])
   },
+  watch: {
+    warningGroupId: function () {
+      if (this.warningGroupId == this.group.group_id) {
+        this.css_animated = true
+        this.css_heartBeat = true
+      }
+    }
+  },
+  
   updated () {
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {
     group: null,
-  }
-  ,
+  },
   components: {
     CustormIcon,
     Message
   },
   methods: {
       openGroupPeopleList () {
-      this.showGroupList = true
-    },
+        this.showGroupList = true
+      },
+      donghua () {
+        this.css_animated = true
+        this.css_heartBeat = true
+      },
+      delteAnimation() {
+        this.css_animated = false
+        this.css_heartBeat = false
+        // 设置warningGroupId为空 以便下次触发
+        this.$store.commit('SET_WARNING_GROUPID', null)
+      }
   }
 }
 </script>
