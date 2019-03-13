@@ -14,7 +14,7 @@
         <div class="immonitor-text">违规指数：</div>
         <Rate disabled v-model="rateVaule" />
       </div>
-      <span>详情</span>
+      <span @click="() => ( toLink(group.group_id) )">详情</span>
     </div>
      <div class="chat-header">
       <span>
@@ -111,6 +111,9 @@ export default {
       this.$store.commit('SET_TOP', group_id)
       this.css_animated = true
       this.css_slideInUp = true
+    },
+    toLink (group_id) {
+      this.$router.push('/')
     },
     openGroupPeopleList () {
       this.showGroupList = true
