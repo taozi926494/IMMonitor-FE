@@ -281,9 +281,10 @@ export default {
               if (msg.detectedArr.length > 0){
                 ++danger_msg_counter;
                 alermMsg['msg'][msg.MsgId] = msg
-              } else {
-                break;
-              }
+              } 
+            } else {
+              // Taoz: 2019-03-15 01:18 修复break逻辑
+              break;
             }
           }
           if (danger_msg_counter >= this.warningMaxNum) {
@@ -293,7 +294,6 @@ export default {
               desc: `这个群有${danger_msg_counter}个警告`,
               duration: this.warningTipDuration
             });
-            console.log(alermMsg)
             this.$store.commit('SET_WARNING_GROUPID', group.group_id)
             this.$store.commit('SET_ALARM_MSGS', alermMsg)
           }
