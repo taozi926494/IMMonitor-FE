@@ -48,6 +48,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import './index.scss'
+import Vue from 'vue'
 export default {
   name: 'user',
   computed: {
@@ -158,6 +159,7 @@ export default {
         NickName: 'Taoz'
       },
       groups: [1, 2, 3, 34,34, 34],
+      obj: {}
     }
   }
 }

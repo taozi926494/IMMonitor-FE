@@ -1,0 +1,159 @@
+.originalAudio{
+  width: 0;
+  height: 0;
+  audio{
+    width: 0;
+    height: 0;
+  }
+}
+.menuList{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ivu-layout-content {
+  background-color: #F5F7F9 !important;
+}
+.iconStyle::before{
+  font-size: 20px;
+}
+.ivu-menu-item{
+  font-size: 15px;
+  i{
+    margin-right: 0;
+  }
+}
+.layout{
+    background: #f5f7f9;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    .container{
+      height: 100%;
+    }
+    .project_name{
+      height: 80px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: -1px 1px 1px 1px rgba(0, 0, 0, .7);
+      z-index: 999;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      span{
+        font-size: 18px;
+        padding: 0 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .layout-header-bar{
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 0;
+    box-sizing: border-box;
+    .layout-header-bar-left{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      .layout-header-bar-left-company{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-left: 8px;
+        img{
+          width: 35px;
+          height: 35px;
+          margin-right: 8px;
+        }
+        span{
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+.menu-icon{
+    transition: all .3s;
+    cursor: pointer;
+}
+.avatar-icon{
+  cursor: pointer;
+}
+.rotate-icon{
+    transform: rotate(-90deg);
+}
+.menu-item span{
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 69px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    transition: width .2s ease .2s;
+    margin-left: 10px;
+}
+.menu-item i{
+    transform: translateX(0px);
+    transition: font-size .2s ease, transform .2s ease;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.collapsed-menu span{
+    width: 0px;
+    transition: width .2s ease;
+    margin: 0;
+}
+.collapsed-menu i{
+    transform: translateX(5px);
+    transition: font-size .2s ease .2s, transform .2s ease .2s;
+    vertical-align: middle;
+    font-size: 22px;
+}
+
+#alarmMsgTip {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  right: 20px;
+  bottom: 20px;
+  background: #333;;
+  line-height: 50px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  .ivu-icon {
+    font-size: 27px;
+  }
+  .alarm-num {
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    width: 30px;
+    top: -15px;
+    right: -15px;
+    z-index: 999;
+    border-radius: 20px;
+    background-color: red;
+  }
+}
+
+#alarmDrawer {
+  .alarmMsgBox {
+    .title {
+      border-left: 3px solid blue;
+      padding-left: 10px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+}

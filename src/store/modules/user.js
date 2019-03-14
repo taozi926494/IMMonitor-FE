@@ -22,7 +22,17 @@ const user = {
     selfHeadImage: null,
     warningTime: 5000,
     warningMaxNum: 2,
-    warningTipDuration: 10  // 报警提示框弹出时长
+    warningTipDuration: 10,  // 报警提示框弹出时长
+
+    // {
+    //   '1': {
+    //     GroupNickName: 'xxx',
+    //     msg: {
+    //       '1233434234': {Content: 'xx', FromUserName: 'xxx'}
+    //     }
+    //   }
+    // }
+    alarmMsgs: {},
   },
   mutations: {
     SET_LOGIN_STATUS: (state, payload) => {
@@ -51,7 +61,31 @@ const user = {
     },
     SET_WARNING_TIP_DURATION(state, duration) {
       state.warningTipDuration = duration
-    }
+    },
+    SET_ALARM_MSGS(state, alarmObjtRec) {
+        // 如果该群不在state的alarmMsgs里面
+        // 新增该group为key
+        let group_id = (alarmObjtRec.group_id)
+        if (!state.alarmMsgs.hasOwnProperty(group_id)) {
+          Vue.set(state.alarmMsgs, 
+            group_id, 
+            {
+              'GroupNickName': alarmObjtRec.GroupNickName,
+              'msg': alarmObjtRec.msg
+            })
+        } else {
+          // 如果state里面已经有该群的记录了
+          // 在msg里面继续循环
+          let msgInstate = state.alarmMsgs[group_id]['msg']
+          for (let msgIdKey in alarmObjtRec.msg) {
+            // 如果msgkey不在group中
+            // 新增一个key
+            if (!msgInstate.hasOwnProperty(msgIdKey)) {
+              Vue.set(msgInstate, msgIdKey, alarmObjtRec.msg[msgIdKey])
+            }
+          }
+        }
+    },
   },
   actions: {
     
