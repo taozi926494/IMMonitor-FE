@@ -26,6 +26,16 @@ const group = {
     SET_PREVIEW_IMG_URL: (state, previewImgUrl) => {
       state.previewImgUrl = previewImgUrl
     },
+    SET_TOP: (state, id) => {
+      let _group_index
+      state.groups.find((group, index) => {
+        if (group.group_id === id) {
+          _group_index = index
+        }
+      })
+      let group_top = state.groups.splice(_group_index, 1)[0]
+      state.groups.unshift(group_top)
+    },
     HANDLE_GROUP_MSG: (state, msg_dict) => {
       if (msg_dict) {
         for (let i = 0; i < msg_dict.msg_list.length; i++) {
@@ -40,6 +50,11 @@ const group = {
           for (let j = 0; j < state.groups.length; j++) {
             if (msg.group_id == state.groups[j].group_id) {
               state.groups[j].msg_list.push(msg)
+              if (!state.groups[j].hasOwnProperty('dangerCount')) {
+                Vue.set(state.groups[j], 'dangerCount', msg.detectedArr.length)
+              } else {
+                state.groups[j].dangerCount += msg.detectedArr.length
+              }
             }
           }
         }

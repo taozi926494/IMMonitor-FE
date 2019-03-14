@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window-container" :class="{ animated: css_animated, heartBeat: css_heartBeat, isdanger: css_isdanger }" @animationend="delteAnimation">
+  <div class="chat-window-container" :class="{ animated: css_animated, heartBeat: css_heartBeat, slideInUp: css_slideInUp, isdanger: css_isdanger }" @animationend="delteAnimation">
     <Drawer :title="`${group.NickName}（成员列表）`" :closable="false" v-model="showGroupList">
       <p
       v-for="(groupMember, index) in group.MemberList"
@@ -9,8 +9,19 @@
         <span>{{ groupMember.NickName }}</span>
       </p>
     </Drawer>
+    <div class="Rate-box">
+      <div class="rate-left">
+        <div class="immonitor-text">违规指数：</div>
+        <Rate disabled v-model="rateVaule" />
+      </div>
+      <span v-show="showInfoBtn" @click="() => ( toLink(group.group_id) )">详情</span>
+    </div>
      <div class="chat-header">
       <span>
+        <div v-show="showTopBtn" @click="() => ( neverTop(group.group_id) )" class="neverTop-box">
+          <CustormIcon class="iconStyle" icon='icon-neverTop'/>
+          <span>置顶</span>
+        </div>
         <img :src="group.HeadImgUrl" alt="">
         <b>{{ group.NickName }}</b>
       </span>
@@ -64,15 +75,18 @@ export default {
       source: 'http://music.163.com/song/media/outer/url?id=431795489.mp3',
       altogetherTimer: null, // 音频总时长
       accomplishData: null, // 当前播放进度比
-
       // animate动画
       css_animated: false,
       css_heartBeat: false,
+      css_slideInUp: false,
       css_isdanger: false
     }
   },
   computed: {
-    ...mapGetters(["userInfo", "groups", "warningGroupId"])
+    ...mapGetters(["userInfo", "groups", "warningGroupId"]),
+    rateVaule: function () {
+      return this.group.rateVal ? this.group.rateVal : 0
+    }
   },
   watch: {
     warningGroupId: function () {
@@ -83,28 +97,44 @@ export default {
       }
     }
   },
-  
   updated () {
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {
     group: null,
+    showTopBtn: {
+      type: Boolean,
+      default: true
+    },
+    showInfoBtn: {
+      type: Boolean,
+      default: true
+    }
   },
   components: {
     CustormIcon,
     Message
   },
   methods: {
-      openGroupPeopleList () {
-        this.showGroupList = true
-      },
-      delteAnimation() {
-        this.css_animated = false
-        this.css_heartBeat = false
-        this.css_isdanger = false
-        // 设置warningGroupId为空 以便下次触发
-        this.$store.commit('SET_WARNING_GROUPID', null)
-      }
+    neverTop (group_id) {
+      this.$store.commit('SET_TOP', group_id)
+      this.css_animated = true
+      this.css_slideInUp = true
+    },
+    toLink (group_id) {
+      this.$router.push(`/groupinfo/${group_id}`)
+    },
+    openGroupPeopleList () {
+      this.showGroupList = true
+    },
+    delteAnimation() {
+      this.css_animated = false
+      this.css_heartBeat = false
+      this.css_slideInUp = false
+      this.css_isdanger = false
+      // 设置warningGroupId为空 以便下次触发
+      this.$store.commit('SET_WARNING_GROUPID', null)
+    }
   }
 }
 </script>

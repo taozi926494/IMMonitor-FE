@@ -25,8 +25,6 @@
                       <img src="@/assets/images/logo.png" alt="">
                       <span>国家工程实验室</span>
                     </div>
-                    <!-- <Button @click="doCheck">轮训检查</Button>
-                    <Button @click="doGetMsg">接收消息</Button> -->
                   </div>
                   <div class="layout-header-bar-right">
                     <Dropdown trigger="click" style="margin-left: 20px">
@@ -42,7 +40,12 @@
                   </div>
                 </Header>
                 <Content :style="{margin: '1px', background: '#fff', width: '100%', overflow: 'scroll', padding: '20px'}">
-                  <router-view/>
+                  <router-view>
+                  </router-view>
+                  <Spin class="loadingStyle" v-if='groups.length > 0 ? false : true'>
+                    <Icon type="ios-loading" size=38 class="demo-spin-icon-load"></Icon>
+                    <div class="text">{{ loadingStatus }}...</div>
+                  </Spin>
                 </Content>
                 
             </Layout>
@@ -82,8 +85,7 @@
 
 
 <script>
-// import axios from 'axios'
-// import { mapState } from 'vuex'
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'IndexPage',
@@ -96,7 +98,8 @@ export default {
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
       ],
       alarmDrawerShow: false,
-      alarmCount: 0
+      alarmCount: 0,
+      loadingStatus: '登录成功'
     }
   },
   
@@ -130,6 +133,7 @@ export default {
   mounted () {
     if (!this.userInfo.uin) {
       this.wxInit()
+      this.loadingStatus = '初始化个人信息'
     }
   },
   updated () {
@@ -159,6 +163,7 @@ export default {
         })
         if (data && data.code === 200) {
           this.getGroupContact()
+          this.loadingStatus = '获取群数据中'
         }
       } catch (error) {
         console.log(error)
@@ -208,26 +213,21 @@ export default {
     },
     // 获取最新消息后检查在store中是否有头像 没有就请求获取并存储
     getMegUserHeadImage (data) {
-       if (data.group_msg_list.msg_list.length > 0) {
+      if (data.group_msg_list.msg_list.length > 0) {
         data.group_msg_list.msg_list.map((itemMsg) => {
           let HeadPath = null
           for (let i = 0; i < this.otherUsersHeadImage.length; i++) {
-            if (
-              this.otherUsersHeadImage[i].username === itemMsg.FromUserName
-            ) {
+            if (this.otherUsersHeadImage[i].username === itemMsg.FromUserName) {
               HeadPath = this.otherUsersHeadImage[i].headPath
               break
             }
           }
-
           /**
            *  给每一条消息添加头像url及时间
            */
           if (HeadPath) {
-            Object.assign(itemMsg, {
-              'UserHeadImage': HeadPath,
-              'SendTime': (new Date()).valueOf()
-            })
+            Vue.set(itemMsg, 'UserHeadImage', HeadPath)
+            Vue.set(itemMsg, 'SendTime', (new Date()).valueOf())
           } else {
             let chatRoomId = this.groups.find((e) => {
               if (e.group_id === itemMsg.group_id) {
@@ -245,18 +245,18 @@ export default {
                 username: itemMsg.FromUserName,
                 headPath: headPath
               })
-              Object.assign(itemMsg, {
-                'UserHeadImage': headPath,
-                'SendTime': (new Date()).valueOf()
-              })
+              Vue.set(itemMsg, 'UserHeadImage', headPath)
+              Vue.set(itemMsg, 'SendTime', (new Date()).valueOf())
               return
             })
           }
         })
         this.$store.commit('HANDLE_GROUP_MSG', data.group_msg_list)
         this.checkWarningAlert(this.groups)
+        this.checkWarningRate(this.groups)
       }
     },
+    // 检查是否超过警告 超出就报警
     checkWarningAlert (groups) {
       groups.map((group) => {
         // 当前时间的前n秒
@@ -290,6 +290,23 @@ export default {
           this.$store.commit('SET_ALARM_MSGS', alermMsg)
         }
       }) 
+    },
+    // 检查违规条数、来评定星级
+    checkWarningRate (groups) {
+      let arr = []
+      groups.map((item) => {
+        if (item.dangerCount) {
+          arr.push(item.dangerCount)
+        }
+      })
+      if (arr.length > 0) {
+        let MaxDangerVal = arr.sort().pop()
+        groups.map((item) => {
+          let Divisor = MaxDangerVal / 5
+          Vue.set(item, 'rateVal', Math.ceil(item.dangerCount / Divisor))
+        })
+      }
+      this.$store.commit('SET_GROUPS', groups)
     }
   }
 }

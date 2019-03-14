@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="position: relative;">
     <div class="wordcloud-header">
     <img :src="headImgUrl" alt="">
       <span>{{ name }}</span>
@@ -17,7 +17,6 @@
     text-align: left;
     font-size: 16px;
     display: flex;
-    
     img {
       border-radius: 5px;
       display: flex;
