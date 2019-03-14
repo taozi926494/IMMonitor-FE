@@ -14,11 +14,11 @@
         <div class="immonitor-text">违规指数：</div>
         <Rate disabled v-model="rateVaule" />
       </div>
-      <span @click="() => ( toLink(group.group_id) )">详情</span>
+      <span v-show="showInfoBtn" @click="() => ( toLink(group.group_id) )">详情</span>
     </div>
      <div class="chat-header">
       <span>
-        <div @click="() => ( neverTop(group.group_id) )" class="neverTop-box">
+        <div v-show="showTopBtn" @click="() => ( neverTop(group.group_id) )" class="neverTop-box">
           <CustormIcon class="iconStyle" icon='icon-neverTop'/>
           <span>置顶</span>
         </div>
@@ -92,15 +92,23 @@ export default {
       if (this.warningGroupId == this.group.group_id) {
         this.css_animated = true
         this.css_heartBeat = true
+        this.css_isdanger = true
       }
     }
   },
-  
   updated () {
     this.$refs.scrollPanel.scrollTop = this.$refs.scrollPanel.scrollHeight
   },
   props: {
     group: null,
+    showTopBtn: {
+      type: Boolean,
+      default: true
+    },
+    showInfoBtn: {
+      type: Boolean,
+      default: true
+    }
   },
   components: {
     CustormIcon,
@@ -113,7 +121,7 @@ export default {
       this.css_slideInUp = true
     },
     toLink (group_id) {
-      this.$router.push('/')
+      this.$router.push(`/groupinfo/${group_id}`)
     },
     openGroupPeopleList () {
       this.showGroupList = true

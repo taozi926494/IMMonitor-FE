@@ -1,6 +1,6 @@
 <template>
   <div v-if="responseStyle === 'left' && type === 'Text'" class="response-chat">
-    <img :src="headImgUrl" alt="">
+    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')" alt="">
     <div class="chat-left">
       <p>{{ content }}</p>
       <span v-show="isDanger">

@@ -5,6 +5,7 @@ import Layout from './views/Layout'
 import Login from './views/Login'
 import GroupList from './views/GroupList'
 import User from './views/User'
+import GroupInfo from './views/GroupInfo'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
           path: '/grouplist',
           name: 'grouplist',
           component: GroupList
+        },
+        {
+          path: '/groupinfo/:group_id',
+          name: 'groupinfo',
+          component: GroupInfo,
         },
         {
           path: '/user',

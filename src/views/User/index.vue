@@ -24,16 +24,16 @@
         <div class="settings">
           <Form :label-width="160">
             
-            <FormItem label="危险报警消息阈值">
-                <InputNumber :min="1" v-model="warningMaxNum"  size="large"></InputNumber>
+            <FormItem label="违规消息报警阈值">
+                <InputNumber :min="1" v-model="warningMaxNum"  size="large"></InputNumber><span class="unit">条</span>
             </FormItem>
-            <FormItem label="危险报警时间段">
+            <FormItem label="危险报警时间区间">
                 <InputNumber :min="0" 
-                v-model="warningTime_h" size="large"></InputNumber>小时
+                v-model="warningTime_h" size="large"></InputNumber><span class="unit">小时</span>
                 <InputNumber :min="0" 
-                v-model="warningTime_m" size="large"></InputNumber>分钟
+                v-model="warningTime_m" size="large"></InputNumber><span class="unit">分钟</span>
                 <InputNumber :min="1" 
-                v-model="warningTime_s" size="large"></InputNumber>秒
+                v-model="warningTime_s" size="large"></InputNumber><span class="unit">秒</span>
             </FormItem>
             <FormItem label="报警提示框停留时间">
                 <InputNumber :min="1" :step="5" v-model="warningTipDuration" size="large"></InputNumber>

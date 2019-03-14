@@ -63,6 +63,7 @@
         </div>
     </div>
 </template>
+
 <style lang="scss" scoped>
 .loadingStyle{
   width: 100%;
@@ -249,7 +250,7 @@ export default {
       ]
     }
   },
-  created () {
+  mounted () {
     if (!this.userInfo.uin) {
       this.wxInit()
       this.loadingStatus = '初始化个人信息'
