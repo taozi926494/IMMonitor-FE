@@ -23,7 +23,10 @@
           </div>
         </div>
         <div class="danger_message_list">
-          <span>违规消息列表</span>
+          <span>
+            <Icon type="md-notifications" />
+            违规消息列表
+          </span>
           <div class="outer-container">
             <div class="inner-container" ref="scrollWindow">
               <ul class="content">
@@ -96,21 +99,20 @@
       .danger_message_list{
         width: 100%;
         height: 390px;
-        background-color: deepskyblue;
         box-shadow: 0 0 5px rgba(0, 0, 0, .3);
         box-sizing: border-box;
         & > span{
-          height: 50px;
-          font-size: 20px;
+          height: 35px;
+          font-size: 18px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #333;
+          background-color: #797878;
           color: #fff;
         }
         .outer-container{
           width: 100%;
-          height: 340px;
+          height: 355px;
           position: relative;
           overflow: hidden;
           text-align: left;
@@ -123,11 +125,11 @@
             bottom: 0;
             overflow-x: hidden;
             overflow-y: scroll;
-            height: 340px;
+            height: 355px;
             padding: 20px 30px;
             .content{
               width: 100%;
-              height: 340px;
+              height: 355px;
               li{
                 display: flex;
                 align-items: center;
