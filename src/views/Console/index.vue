@@ -1,6 +1,7 @@
 <template>
   <div class="chat_page_container">
-    <GroupPanel v-for="group in groups" :group="group" :key="group.id" class="chat_window" />
+    <!-- <Button class="get_msg" @click="get_msg">拉取新消息</Button> -->
+    <GroupPanel v-for="group in groups" :group="group" :key="group.group_id" class="chat_window" />
     <div v-show='previewImgUrl' class="preview-image-box" @click="$store.commit('SET_PREVIEW_IMG_URL', null)">
       <img :src="previewImgUrl" alt="">
     </div>
@@ -13,7 +14,6 @@
 import './index.scss'
 import { mapGetters } from "vuex";
 import GroupPanel from "@/components/GroupPanel";
-import axios from 'axios'
 // import msg_list from "@/mock/msg_list"
 // import msg_detect from "@/mock/msg_detect"
 // import groups from '@/mock/groups'

@@ -1,6 +1,6 @@
 <template>
   <div v-if="responseStyle === 'left' && type === 'Text'" class="response-chat">
-    <img :src="headImgUrl" alt="">
+    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')" alt="">
     <div class="chat-left">
       <p>{{ content }}</p>
       <span v-show="isDanger">
@@ -129,8 +129,8 @@ export default {
   },
   computed: {
     NewFileUrl: function () {
-      // return `http://172.16.111.6:5000${this.fileUrl}`
-      return `http://localhost:5000${this.fileUrl}`
+      return `http://172.16.111.6:5000${this.fileUrl}`
+      // return `http://localhost:5000${this.fileUrl}`
 
       // 上线
       // return this.fileUrl
