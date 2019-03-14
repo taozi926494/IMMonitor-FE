@@ -222,6 +222,7 @@ export default {
               break
             }
           }
+          
           /**
            *  给每一条消息添加头像url及时间
            */
@@ -267,28 +268,37 @@ export default {
           GroupNickName: group.NickName,
           msg: {}
         }
-        for (let i = 0; i < group.msg_list.length; i++) {
-          let msg = group.msg_list[i]
-          if (msg.SendTime > beforTime) {
-            if (msg.detectedArr.length > 0){
-              ++danger_msg_counter;
-              alermMsg['msg'][msg.MsgId] = msg
-            } else {
-              break;
+
+        /**
+         * Taoz: 2019-03-15 01:18
+         * 判断最近收到的消息中是否有违规消息
+         * 如果没有违规消息，不需要报警，不然会造成正常消息重复报警的情况
+         */
+        if (group.violating) {
+          for (let i = 0; i < group.msg_list.length; i++) {
+            let msg = group.msg_list[i]
+            if (msg.SendTime > beforTime) {
+              if (msg.detectedArr.length > 0){
+                ++danger_msg_counter;
+                alermMsg['msg'][msg.MsgId] = msg
+              } else {
+                break;
+              }
             }
           }
+          if (danger_msg_counter >= this.warningMaxNum) {
+            this.playWarningAudioFn()
+            this.$Notice.warning({
+              title: `群：${group.NickName}近期违规消息过多`,
+              desc: `这个群有${danger_msg_counter}个警告`,
+              duration: this.warningTipDuration
+            });
+            console.log(alermMsg)
+            this.$store.commit('SET_WARNING_GROUPID', group.group_id)
+            this.$store.commit('SET_ALARM_MSGS', alermMsg)
+          }
         }
-        if (danger_msg_counter >= this.warningMaxNum) {
-          this.playWarningAudioFn()
-          this.$Notice.warning({
-            title: `群：${group.NickName}近期违规消息过多`,
-            desc: `这个群有${danger_msg_counter}个警告`,
-            duration: this.warningTipDuration
-          });
-          console.log(alermMsg)
-          this.$store.commit('SET_WARNING_GROUPID', group.group_id)
-          this.$store.commit('SET_ALARM_MSGS', alermMsg)
-        }
+        this.$store.commit('RESET_VIOLATING', group.group_id)
       }) 
     },
     // 检查违规条数、来评定星级

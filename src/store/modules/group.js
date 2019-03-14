@@ -14,7 +14,7 @@ const group = {
   state: {
     groups: [],
     previewImgUrl: null,
-    warningGroupId: null
+    warningGroupId: null,
   },
   mutations: {
     SET_WARNING_GROUPID: (state, groupid) => {
@@ -41,12 +41,15 @@ const group = {
         for (let i = 0; i < msg_dict.msg_list.length; i++) {
           let msg = msg_dict.msg_list[i]
           msg.detectedArr = []
+          // 首先循环收到的消息数组及检测结果数组
+          // 给对应的消息加上检测结果
           for (let d_i = 0; d_i < msg_dict.msg_list_detected.length; d_i++) {
             let detect_result = msg_dict.msg_list_detected[d_i]
             if (detect_result.msg_id == msg.MsgId) {
               msg.detectedArr.push(detect_result)
             }
           }
+          // 向群组中添加消息
           for (let j = 0; j < state.groups.length; j++) {
             if (msg.group_id == state.groups[j].group_id) {
               state.groups[j].msg_list.push(msg)
@@ -55,8 +58,37 @@ const group = {
               } else {
                 state.groups[j].dangerCount += msg.detectedArr.length
               }
+              
+              /**
+             * Taoz: 2019-03-15 01:18
+             * 给一个违规消息标志位，判断最近收到的消息中是否有违规消息
+             * 如果不是违规消息，不需要报警，不然会造成正常消息重复报警的情况
+             * 这个标志位会在checkAlarm检查是否超过违规阈值的函数中中清零
+             */
+              if (msg.detectedArr.length > 0) {
+                if (!state.groups[j].hasOwnProperty('violating')) {
+                  Vue.set(state.groups[j], 'violating', true)
+                } else {
+                  state.groups[j].violating = true
+                }
+              } else {
+                if (!state.groups[j].hasOwnProperty('violating')) {
+                  Vue.set(state.groups[j], 'violating', false)
+                } else {
+                  state.groups[j].violating = false
+                }
+              }
+
             }
           }
+        }
+      }
+    },
+    RESET_VIOLATING: (state, group_id) => {
+      for (let i = 0; i < state.groups.length; i++) {
+        if (state.groups[i].group_id == group_id) {
+          state.groups[i].violating = false
+          break;
         }
       }
     }
