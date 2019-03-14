@@ -142,6 +142,28 @@ const user = {
           resolve(`${BaseUrl}${e.data.data.FilePath}`)
         })
       })
+    },
+    sendMsg({commit}, msg) {
+      return new Promise((resolve, rejectt) => {
+        axios({
+          method: 'get',
+          url: `${BaseUrl}/wx/message/send_msg`,
+          params: {
+            to_username: msg.to_username,
+            content: msg.content,
+          },
+          withCredentials: true
+        }).then((e) => {
+          resolve(e.data)
+        })
+      })
+    },
+    sendMsgToFileHelper({commit}, content) {
+      let msg = {
+        to_username: 'filehelper',
+        content: content,
+      }
+      return this.sendMsg(msg)
     }
   }
 }
