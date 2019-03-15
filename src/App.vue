@@ -5,11 +5,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-=======
-import { mapGetters } from 'vuex'
-
->>>>>>> 9956b86d6d3a1c9779a2546382d9393e72355a91
 export default {
   name: 'app'
 }

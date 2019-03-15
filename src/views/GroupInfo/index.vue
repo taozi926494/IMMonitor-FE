@@ -33,12 +33,13 @@
               <ul class="content">
                 <li v-for="(item, index) in warningMsgList" :key="index">
                   <Message 
-                  :responseStyle="userInfo.UserName !== item.FromUserName ? 'left' : 'right'"
+                  :responseStyle="userInfo.NickName !== item.FromUserNickName ? 'left' : 'right'"
                   :type='item.Type'
                   :content='item.Content'
                   :detectedArr='item.detectedArr'
                   :fileUrl='item.FilePath'
                   :headImgUrl='item.UserHeadImage'
+                  :nickName='item.FromUserNickName'
                   />
                 </li>
               </ul>
