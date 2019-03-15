@@ -50,6 +50,9 @@ const user = {
     },
     SET_WARNING_TIP_DURATION(state, duration) {
       state.warningTipDuration = duration
+    },
+    CLEAR_UIN (state) {
+      state.userInfo.uin = ''
     }
   },
   actions: {
@@ -143,7 +146,7 @@ const user = {
       })
     },
     sendMsg({commit}, msg) {
-      return new Promise((resolve, rejectt) => {
+      return new Promise((resolve, reject) => {
         axios({
           method: 'get',
           url: `${BaseUrl}/wx/message/send_msg`,

@@ -59,6 +59,16 @@ const group = {
           }
         }
       }
+    },
+    ADD_SEND_MSG: (state, msg) => {
+      console.log(state.groups)
+      console.log(msg)
+      for (let i = 0; i < state.groups.length; i++) {
+        if (state.groups[i].group_id === msg.group_id) {
+          state.groups[i].msg_list.push(msg)
+          break
+        }
+      }
     }
   },
   actions: {
@@ -120,6 +130,23 @@ const group = {
           if (e && e.data && e.data.code === 200) {
             // commit('SET_GROUP_HEAD_IMAGE', e.data.data)
             resolve(`${BaseUrl}${e.data.data.FilePath}`)
+          }
+        })
+      })
+    },
+    // 获取群的历史消息
+    getGroupHistoryMsg ({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: `${BaseUrl}/wx/message/groups_lastmsg`,
+          params: {
+            uin: payload.uin
+          },
+          withCredentials: true
+        }).then((e) => {
+          if (e && e.data && e.data.code === 200) {
+            resolve(e.data.data)
           }
         })
       })

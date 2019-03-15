@@ -293,6 +293,10 @@ export default {
           })
           this.$store.commit('SET_GROUPS', groups_ret.data)
         })
+        let groups_msg = await this.$store.dispatch('getGroupHistoryMsg', {
+          uin: this.userInfo.uin
+        })
+        this.getMegUserHeadImage(groups_msg)
         this.syckCheck()
       } catch (error) {
         console.log(error)

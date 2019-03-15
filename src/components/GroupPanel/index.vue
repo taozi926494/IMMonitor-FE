@@ -38,12 +38,13 @@
           <ul>
             <li v-for="msg in group.msg_list" :key="msg.MsgId" class="response-chat">
               <Message 
-                :response-style="userInfo.UserName !== msg.FromUserName ? 'left' : 'right'"
+                :response-style="userInfo.NickName !== msg.FromUserNickName ? 'left' : 'right'"
                 :type="msg.Type"
                 :content="msg.Content"
                 :detectedArr="msg.detectedArr"
                 :fileUrl='msg.FilePath'
                 :headImgUrl='msg.UserHeadImage'
+                :nickName='msg.FromUserNickName'
                 />
             </li>
           </ul>
@@ -52,14 +53,19 @@
     </div>
     <div class="chat-input-box">
       <textarea v-model="introduct" placeholder="Add a bio to your profile"></textarea>
+      <button @click="() => { sendMsg(group) }">发送</button>
     </div>
   </div>
 </template>
 
+<style lang="scss" scoped>
+@import './index.scss';
+</style>
+
 <script>
 // import Icon from '../iconComponent'
+// import './index.scss';
 import 'animate.css'
-import './index.scss';
 import Message from '@/components/Message'
 import { mapGetters } from 'vuex'
 import CustormIcon from '@/components/CustormIcon'
@@ -82,7 +88,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["userInfo", "groups", "warningGroupId"]),
+    ...mapGetters(["userInfo", "groups", "warningGroupId", "selfHeadImage"]),
     rateVaule: function () {
       return this.group.rateVal ? this.group.rateVal : 0
     }
@@ -136,6 +142,31 @@ export default {
       this.css_slideInUp = false
       // 设置warningGroupId为空 以便下次触发
       this.$store.commit('SET_WARNING_GROUPID', null)
+    },
+    // 发送消息
+    async sendMsg (group) {
+      let response = await this.$store.dispatch('sendMsg', {
+        to_username: group.UserName,
+        content: this.introduct
+      })
+      if (response && response.code === 200) {
+        this.$store.commit('ADD_SEND_MSG', {
+          Content: this.introduct,
+          FilePath: null,
+          FromUserDisplayName: null,
+          FromUserName: this.userInfo.UserName,
+          FromUserNickName: this.userInfo.NickName,
+          MsgId: new Date().valueOf() + Math.ceil(Math.random() * 10000),
+          SendTime: new Date().valueOf(),
+          Type: "Text",
+          UserHeadImage: this.selfHeadImage,
+          date_created: new Date(),
+          detectedArr: [],
+          group_id: group.group_id,
+          user_uin: this.userInfo.uin,
+        })
+        this.introduct = ''
+      }
     }
   }
 }

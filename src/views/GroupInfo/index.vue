@@ -7,7 +7,8 @@
       <div class="chat_info_topright_box">
         <div class="chat_info_box">
           <div class="labelbox">
-            <LabelBox 
+            <LabelBox
+            iconType='ios-warning'
             labelName='违规消息数'
             labelBg='#ed3f14'
             :countNum='statistic.detect_count'
