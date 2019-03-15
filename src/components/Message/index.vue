@@ -1,105 +1,10 @@
 <template>
-  <div v-if="responseStyle === 'left' && type === 'Text'" class="response-chat">
-    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')" alt="">
-    <div class="chat-left">
-      <p>{{ content }}</p>
-      <span v-show="isDanger">
-        <a
-          v-for="(item, index) in detectedArr"
-          :key="index"
-          :title="formatTipContent(item.result_label)"
-          :style="{backgroundColor: formatTipBg(item.result_label)}">
-          {{ formatTip(item.result_label) }}
-        </a>
-      </span>
-    </div>
-  </div>
-  <div v-else-if="responseStyle === 'right' && type === 'Text'"  class="send-chat">
-    <div class="chat-right">
-      <p>{{ content }}</p>
-      <span v-show="isDanger">
-        <a
-          v-for="(item, index) in detectedArr"
-          :key="index"
-          :title="formatTipContent(item.result_label)"
-          :style="{backgroundColor: formatTipBg(item.result_label)}">
-          {{ formatTip(item.result_label) }}
-        </a>
-      </span>
-    </div>
-    <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')" alt="">
-  </div>
-  <div v-else-if="responseStyle === 'left' && type === 'Audio'" class="response-audio-chat">
-    <div class="audio-chat-box-left">
-      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
-      <div
-        @click='playAudioFn'
-        class="chat-left">
-        <span v-show="isDanger">
-          <a
-            v-for="(item, index) in detectedArr"
-            :key="index"
-            :title="formatTipContent(item.result_label)"
-            :style="{backgroundColor: formatTipBg(item.result_label)}">
-            {{ formatTip(item.result_label) }}
-          </a>
-        </span>
-        <CustormIcon :icon='leftAudioPlay'/>
-        <b>{{ countTime }}s</b>
-      </div>
-    </div>
-    <div class="audioText-left">
-      <p>{{ content }}</p>
-    </div>
-  </div>
-  <div v-else-if="responseStyle === 'right' && type === 'Audio'" class="send-audio-chat">
-    <div class="audio-chat-box-right">
-      <div
-        @click='playAudioFn'
-        class="chat-right">
-        <span v-show="isDanger">
-          <a
-            v-for="(item, index) in detectedArr"
-            :key="index"
-            :title="formatTipContent(item.result_label)"
-            :style="{backgroundColor: formatTipBg(item.result_label)}">
-            {{ formatTip(item.result_label) }}
-          </a>
-        </span>
-        <b>{{ countTime }}s</b>
-        <CustormIcon :icon='rightAudioPlay'/>
-      </div>
-      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
-    </div>
-    <div class="audioText-right">
-      <p>{{ content }}</p>
-    </div>
-  </div>
-  <div v-else-if="responseStyle === 'left' && type === 'Image'" class="response-image-chat">
-    <div class="image-chat-box-left">
-      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
-      <div
-        @click='checkImage'
-        class="chat-left">
-        <span v-show="isDanger">
-          <a
-            v-for="(item, index) in detectedArr"
-            :key="index"
-            :title="formatTipContent(item.result_label)"
-            :style="{backgroundColor: formatTipBg(item.result_label)}">
-            {{ formatTip(item.result_label) }}
-          </a>
-        </span>
-        <img :src="NewFileUrl" alt="">
-      </div>
-    </div>
-  </div>
-  <div v-else-if="responseStyle === 'right' && type === 'Image'" class="send-image-chat">
-    <div class="image-chat-box-right">
-      <div
-        @click='checkImage'
-        class="chat-right">
-        <img :src="NewFileUrl" alt="">
+  <div v-if="responseStyle === 'left' && type === 'Text'" class="response-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="response-chat">
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')" alt="">
+      <div class="chat-left">
+        <p>{{ content }}</p>
         <span v-show="isDanger">
           <a
             v-for="(item, index) in detectedArr"
@@ -110,7 +15,120 @@
           </a>
         </span>
       </div>
-      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'right' && type === 'Text'" class="send-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="send-chat">
+      <div class="chat-right">
+        <p>{{ content }}</p>
+        <span v-show="isDanger">
+          <a
+            v-for="(item, index) in detectedArr"
+            :key="index"
+            :title="formatTipContent(item.result_label)"
+            :style="{backgroundColor: formatTipBg(item.result_label)}">
+            {{ formatTip(item.result_label) }}
+          </a>
+        </span>
+      </div>
+      <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')" alt="">
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'left' && type === 'Audio'" class="response-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="response-audio-chat">
+      <div class="audio-chat-box-left">
+        <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
+        <div
+          @click='playAudioFn'
+          class="chat-left">
+          <span v-show="isDanger">
+            <a
+              v-for="(item, index) in detectedArr"
+              :key="index"
+              :title="formatTipContent(item.result_label)"
+              :style="{backgroundColor: formatTipBg(item.result_label)}">
+              {{ formatTip(item.result_label) }}
+            </a>
+          </span>
+          <CustormIcon :icon='leftAudioPlay'/>
+          <b>{{ countTime }}s</b>
+        </div>
+      </div>
+      <div class="audioText-left">
+        <p>{{ content }}</p>
+      </div>
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'right' && type === 'Audio'" class="send-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="send-audio-chat">
+      <div class="audio-chat-box-right">
+        <div
+          @click='playAudioFn'
+          class="chat-right">
+          <span v-show="isDanger">
+            <a
+              v-for="(item, index) in detectedArr"
+              :key="index"
+              :title="formatTipContent(item.result_label)"
+              :style="{backgroundColor: formatTipBg(item.result_label)}">
+              {{ formatTip(item.result_label) }}
+            </a>
+          </span>
+          <b>{{ countTime }}s</b>
+          <CustormIcon :icon='rightAudioPlay'/>
+        </div>
+        <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
+      </div>
+      <div class="audioText-right">
+        <p>{{ content }}</p>
+      </div>
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'left' && type === 'Image'" class="response-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="response-image-chat">
+      <div class="image-chat-box-left">
+        <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux1.jpeg')">
+        <div
+          @click='checkImage'
+          class="chat-left">
+          <span v-show="isDanger">
+            <a
+              v-for="(item, index) in detectedArr"
+              :key="index"
+              :title="formatTipContent(item.result_label)"
+              :style="{backgroundColor: formatTipBg(item.result_label)}">
+              {{ formatTip(item.result_label) }}
+            </a>
+          </span>
+          <img :src="NewFileUrl" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else-if="responseStyle === 'right' && type === 'Image'" class="send-box">
+    <div class="username">{{ nickName }}</div>
+    <div class="send-image-chat">
+      <div class="image-chat-box-right">
+        <div
+          @click='checkImage'
+          class="chat-right">
+          <img :src="NewFileUrl" alt="">
+          <span v-show="isDanger">
+            <a
+              v-for="(item, index) in detectedArr"
+              :key="index"
+              :title="formatTipContent(item.result_label)"
+              :style="{backgroundColor: formatTipBg(item.result_label)}">
+              {{ formatTip(item.result_label) }}
+            </a>
+          </span>
+        </div>
+        <img :src="headImgUrl ? headImgUrl : require('../../assets/images/toux2.jpg')">
+      </div>
     </div>
   </div>
 </template>
@@ -142,6 +160,9 @@ export default {
   props: {
     // 左右样式判断
     responseStyle: {
+      type: String
+    },
+    nickName: {
       type: String
     },
     // 消息类型

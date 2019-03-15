@@ -7,7 +7,8 @@
       <div class="chat_info_topright_box">
         <div class="chat_info_box">
           <div class="labelbox">
-            <LabelBox 
+            <LabelBox
+            iconType='ios-warning'
             labelName='违规消息数'
             labelBg='#ed3f14'
             :countNum='statistic.detect_count'
@@ -32,12 +33,13 @@
               <ul class="content">
                 <li v-for="(item, index) in warningMsgList" :key="index">
                   <Message 
-                  :responseStyle="userInfo.UserName !== item.FromUserName ? 'left' : 'right'"
+                  :responseStyle="userInfo.NickName !== item.FromUserNickName ? 'left' : 'right'"
                   :type='item.Type'
                   :content='item.Content'
                   :detectedArr='item.detectedArr'
                   :fileUrl='item.FilePath'
                   :headImgUrl='item.UserHeadImage'
+                  :nickName='item.FromUserNickName'
                   />
                 </li>
               </ul>

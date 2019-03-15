@@ -33,7 +33,7 @@ export default {
     }
   },
   created () {
-    console.log('this.getQrcode', this.$store)
+    this.$store.commit('CLEAR_UIN')
     this.getQrcode()
   },
   methods: {

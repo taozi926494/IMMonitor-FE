@@ -61,6 +61,9 @@ const user = {
     SET_WARNING_TIP_DURATION(state, duration) {
       state.warningTipDuration = duration
     },
+    CLEAR_UIN (state) {
+      state.userInfo.uin = ''
+    },
     SET_ALARM_MSGS(state, alarmObjtRec) {
         // 如果该群不在state的alarmMsgs里面
         // 新增该group为key
@@ -177,7 +180,7 @@ const user = {
       })
     },
     sendMsg({commit}, msg) {
-      return new Promise((resolve, rejectt) => {
+      return new Promise((resolve, reject) => {
         axios({
           method: 'get',
           url: `${BaseUrl}/wx/message/send_msg`,
