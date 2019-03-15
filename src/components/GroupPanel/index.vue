@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-window-container" :class="{ animated: css_animated, heartBeat: css_heartBeat, slideInUp: css_slideInUp }" @animationend="delteAnimation">
+  <div class="chat-window-container" :class="{ animated: css_animated, heartBeat: css_heartBeat, slideInUp: css_slideInUp, isdanger: css_isdanger }" @animationend="delteAnimation">
     <Drawer :title="`${group.NickName}（成员列表）`" :closable="false" v-model="showGroupList">
       <p
       v-for="(groupMember, index) in group.MemberList"
@@ -84,7 +84,8 @@ export default {
       // animate动画
       css_animated: false,
       css_heartBeat: false,
-      css_slideInUp: false
+      css_slideInUp: false,
+      css_isdanger: false
     }
   },
   computed: {
@@ -132,14 +133,11 @@ export default {
     openGroupPeopleList () {
       this.showGroupList = true
     },
-    donghua () {
-      this.css_animated = true
-      this.css_heartBeat = true
-    },
     delteAnimation() {
       this.css_animated = false
       this.css_heartBeat = false
       this.css_slideInUp = false
+      this.css_isdanger = false
       // 设置warningGroupId为空 以便下次触发
       this.$store.commit('SET_WARNING_GROUPID', null)
     },

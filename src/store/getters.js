@@ -7,7 +7,9 @@ const getters = {
   warningTime: state => state.user.warningTime,
   warningMaxNum: state => state.user.warningMaxNum,
   warningTipDuration: state => state.user.warningTipDuration,
-  warningGroupId: state => state.group.warningGroupId
+  warningGroupId: state => state.group.warningGroupId,
+  alarmMsgs: state => state.user.alarmMsgs
+  // alarmMsgsback: state => state.user.alarmMsgsback
 }
 
 export default getters

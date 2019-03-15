@@ -47,6 +47,7 @@
                     <div class="text">{{ loadingStatus }}...</div>
                   </Spin>
                 </Content>
+                
             </Layout>
         </Layout>
         <!-- 产生 警报声音 -->
@@ -61,151 +62,27 @@
               type="audio/mpeg">
           </audio>
         </div>
+
+        <Drawer id="alarmDrawer" title="危险消息列表" :closable="false" v-model="alarmDrawerShow">
+          <div class="alarmMsgBox" v-for="(group_val, group_key) in alarmMsgs" :key=group_key>
+            <div class="title">
+              来自群: {{ group_val.GroupNickName }}
+            </div>
+            <p v-for="(msg, msgId) in group_val.msg" :key="msgId"> {{msg.Content}} </p>
+          </div> 
+        </Drawer>
+        <div id="alarmMsgTip" @click="alarmDrawerShow = !alarmDrawerShow">
+          <i class="alarm-num"> {{ alarmCount }}</i>
+          <Icon type="md-notifications" />
+          
+        </div> 
     </div>
 </template>
 
 <style lang="scss" scoped>
-.loadingStyle{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .demo-spin-icon-load{
-    animation: ani-demo-spin 1s linear infinite;
-  }
-  @keyframes ani-demo-spin {
-    from { transform: rotate(0deg);}
-    50%  { transform: rotate(180deg);}
-    to   { transform: rotate(360deg);}
-  }
-  .text{
-    font-size: 16px;
-    margin-top: 8px;
-  }
-}
-.originalAudio{
-  width: 0;
-  height: 0;
-  audio{
-    width: 0;
-    height: 0;
-  }
-}
-.menuList{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.ivu-layout-content {
-  background-color: #F5F7F9 !important;
-}
-.iconStyle::before{
-  font-size: 20px;
-}
-.ivu-menu-item{
-  font-size: 15px;
-  i{
-    margin-right: 0;
-  }
-}
-.layout{
-    background: #f5f7f9;
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-    .container{
-      height: 100%;
-    }
-    .project_name{
-      height: 80px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: -1px 1px 1px 1px rgba(0, 0, 0, .7);
-      z-index: 999;
-      position: relative;
-      width: 100%;
-      box-sizing: border-box;
-      span{
-        font-size: 18px;
-        padding: 0 16px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-    .layout-header-bar{
-    background: #fff;
-    box-shadow: 0 1px 1px rgba(0,0,0,.1);
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px 0 0;
-    box-sizing: border-box;
-    .layout-header-bar-left{
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      .layout-header-bar-left-company{
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        margin-left: 8px;
-        img{
-          width: 35px;
-          height: 35px;
-          margin-right: 8px;
-        }
-        span{
-          font-size: 16px;
-        }
-      }
-    }
-  }
-}
-.menu-icon{
-    transition: all .3s;
-    cursor: pointer;
-}
-.avatar-icon{
-  cursor: pointer;
-}
-.rotate-icon{
-    transform: rotate(-90deg);
-}
-.menu-item span{
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 69px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: bottom;
-    transition: width .2s ease .2s;
-    margin-left: 10px;
-}
-.menu-item i{
-    transform: translateX(0px);
-    transition: font-size .2s ease, transform .2s ease;
-    vertical-align: middle;
-    font-size: 16px;
-}
-.collapsed-menu span{
-    width: 0px;
-    transition: width .2s ease;
-    margin: 0;
-}
-.collapsed-menu i{
-    transform: translateX(5px);
-    transition: font-size .2s ease .2s, transform .2s ease .2s;
-    vertical-align: middle;
-    font-size: 22px;
-}
+@import './index.scss';
 </style>
+
 
 <script>
 import Vue from 'vue'
@@ -220,6 +97,8 @@ export default {
         {title: '群管理', icon: 'ios-contacts', name: '1-2', path: '/grouplist'},
         {title: '个人中心', icon: 'ios-contact', name: '1-3', path: '/user'}
       ],
+      alarmDrawerShow: false,
+      alarmCount: 0,
       loadingStatus: '登录成功'
     }
   },
@@ -235,7 +114,8 @@ export default {
       'otherUsersHeadImage',
       'warningTime',
       'warningMaxNum',
-      'warningTipDuration'
+      'warningTipDuration',
+      'alarmMsgs'
     ]),
     rotateIcon () {
       return [
@@ -255,6 +135,14 @@ export default {
       this.wxInit()
       this.loadingStatus = '初始化个人信息'
     }
+  },
+  updated () {
+    let count = 0
+    for (let group_idk in this.alarmMsgs) {
+      let group = this.alarmMsgs[group_idk]
+      count += Object.keys(group.msg).length
+    }
+    this.alarmCount = count
   },
   methods: {
     collapsedSider () {
@@ -338,6 +226,7 @@ export default {
               break
             }
           }
+          
           /**
            *  给每一条消息添加头像url及时间
            */
@@ -377,26 +266,43 @@ export default {
       groups.map((group) => {
         // 当前时间的前n秒
         let danger_msg_counter = 0;
-        let beforTime = new Date().valueOf() - this.warningTime
-        for (let i = 0; i < group.msg_list.length; i++) {
-          let msg = group.msg_list[i]
-          if (msg.SendTime > beforTime) {
-            if (msg.detectedArr.length > 0){
-              ++danger_msg_counter;
+        let beforTime =new Date().valueOf() - this.warningTime
+        let alermMsg = {
+          group_id: group.group_id,
+          GroupNickName: group.NickName,
+          msg: {}
+        }
+
+        /**
+         * Taoz: 2019-03-15 01:18
+         * 判断最近收到的消息中是否有违规消息
+         * 如果没有违规消息，不需要报警，不然会造成正常消息重复报警的情况
+         */
+        if (group.violating) {
+          for (let i = 0; i < group.msg_list.length; i++) {
+            let msg = group.msg_list[i]
+            if (msg.SendTime > beforTime) {
+              if (msg.detectedArr.length > 0){
+                ++danger_msg_counter;
+                alermMsg['msg'][msg.MsgId] = msg
+              } 
             } else {
+              // Taoz: 2019-03-15 01:18 修复break逻辑
               break;
             }
           }
+          if (danger_msg_counter >= this.warningMaxNum) {
+            this.playWarningAudioFn()
+            this.$Notice.warning({
+              title: `群：${group.NickName}近期违规消息过多`,
+              desc: `这个群有${danger_msg_counter}个警告`,
+              duration: this.warningTipDuration
+            });
+            this.$store.commit('SET_WARNING_GROUPID', group.group_id)
+            this.$store.commit('SET_ALARM_MSGS', alermMsg)
+          }
         }
-        if (danger_msg_counter >= this.warningMaxNum) {
-          this.playWarningAudioFn()
-          this.$Notice.warning({
-            title: `群：${group.NickName}近期违规消息过多`,
-            desc: `这个群有${danger_msg_counter}个警告`,
-            duration: this.warningTipDuration
-          });
-          this.$store.commit('SET_WARNING_GROUPID', group.group_id)
-        }
+        this.$store.commit('RESET_VIOLATING', group.group_id)
       }) 
     },
     // 检查违规条数、来评定星级
